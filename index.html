@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hes audio</title>
+<style>
+:root{--bg:#FAF9F8;--card:#fff;--ink:#161616;--mute:#8A8580;--line:#E8E4E1;--soft:#F1EEEC;--btn:#161616;--btn-ink:#fff;--danger:#B3261E;--tag:#2563EB;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121212;--card:#1C1C1C;--ink:#F2F0EE;--mute:#9A948F;--line:#2C2A29;--soft:#262423;--btn:#F2F0EE;--btn-ink:#121212;--danger:#FF8A80;--tag:#7FA8FF}}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.4;padding-bottom:env(safe-area-inset-bottom,0px)}
+header{display:flex;align-items:center;gap:8px;padding:10px 12px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+header h3{margin:0;font-size:16px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.circ{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);display:grid;place-items:center;cursor:pointer;flex:none;padding:0}
+.circ svg{width:18px;height:18px}
+.team{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px 3px 3px 11px;font-size:13px}
+.team i{font-style:normal;background:var(--soft);color:var(--mute);border-radius:999px;padding:2px 8px;font-size:11px}
+.av{width:30px;height:30px;border-radius:50%;background:#555;color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+@media (max-width:430px){.team span{display:none}.team{padding-left:6px}}
+main{max-width:560px;margin:0 auto;padding:2px 12px 40px}
+.view{display:none}.view.on{display:block}
+h2{font-size:19px;margin:22px 4px 10px;font-weight:600}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;text-align:left;color:var(--ink);font:inherit;font-size:15px;font-weight:500;min-height:88px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer}
+.tile svg{width:28px;height:28px;padding:5px;border-radius:50%;background:var(--soft)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px}
+.dot{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:700;color:#fff;background:#6b6663;font-size:14px;object-fit:cover}
+.vbtn{display:flex;align-items:center;gap:10px;background:none;border:0;font:inherit;font-size:16px;color:var(--ink);cursor:pointer;padding:0}
+.ed{position:relative;margin-top:12px}
+.hl,.ed textarea{font:inherit;font-size:16px;line-height:1.55;padding:0;margin:0;white-space:pre-wrap;overflow-wrap:break-word;word-break:normal;letter-spacing:normal}
+.hl{min-height:200px;pointer-events:none}
+.hl b{font-weight:400;color:var(--tag)}
+.ed textarea{position:absolute;inset:0;width:100%;height:100%;color:transparent;caret-color:var(--ink);background:transparent;border:0;resize:none;outline:0;overflow:hidden}
+.ed textarea::placeholder{color:var(--mute)}
+.bar{display:flex;justify-content:flex-end}
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:none;z-index:6}
+.dockin{max-width:560px;margin:0 auto}
+body[data-view="parler"] .dock{display:block}
+body[data-view="parler"] #v-parler{padding-bottom:300px}
+body[data-view="parler"] #toast{bottom:calc(310px + env(safe-area-inset-bottom,0px))}
+.chips{display:flex;gap:6px;margin-top:10px;overflow-x:auto;padding-bottom:2px}
+.chip{flex:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 11px;font:inherit;font-size:12.5px;cursor:pointer}
+.chip.on{background:var(--btn);color:var(--btn-ink);border-color:var(--btn)}
+.btn{background:var(--btn);color:var(--btn-ink);border:0;border-radius:999px;padding:12px 24px;font:inherit;font-size:15px;font-weight:600;cursor:pointer}
+.btn.ghost{background:var(--soft);color:var(--ink);font-weight:500;padding:8px 14px;font-size:14px}
+.btn:disabled{opacity:.35}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #777;outline-offset:2px}
+.row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row.m{flex-wrap:wrap}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block;font-weight:600}
+.row .t span{display:block;color:var(--mute);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acts{display:flex;gap:8px;width:100%;padding-left:46px}
+.avb{background:none;border:0;padding:0;cursor:pointer}
+.ic{background:var(--soft);border:0;border-radius:999px;color:var(--ink);padding:7px 13px;cursor:pointer;font:inherit;font-size:13px}
+.ic.del{color:var(--danger)}
+.note{color:var(--mute);font-size:13px;margin:10px 4px}
+.warn{background:var(--soft);border-radius:14px;padding:11px 13px;font-size:13px;margin-bottom:10px;display:none}
+.emo{color:var(--mute);font-size:13px;margin:8px 4px 0;min-height:18px}
+.empty{text-align:center;color:var(--mute);padding:28px 10px;font-size:14px}
+.drop{display:block;border:1.5px dashed var(--line);border-radius:16px;padding:20px 12px;text-align:center;color:var(--mute);cursor:pointer;margin:12px 0;font-size:14px}
+.drop input{display:none}
+label.f{display:block;font-weight:600;margin:14px 0 6px;font-size:14px}
+input[type=text]{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;font:inherit;font-size:15px;background:var(--bg);color:var(--ink)}
+.chk{display:flex;gap:10px;align-items:flex-start;margin:14px 0;font-size:13px;color:var(--mute)}
+.chk input{margin-top:2px;width:17px;height:17px;accent-color:var(--btn)}
+audio{width:100%;margin-top:10px}
+aside{position:fixed;inset:0 auto 0 0;width:78%;max-width:300px;background:var(--bg);border-right:1px solid var(--line);padding:calc(14px + env(safe-area-inset-top,0px)) 12px 20px;transform:translateX(-100%);transition:transform .2s;z-index:20;overflow:auto}
+aside.open{transform:none}
+aside b{display:block;font-size:20px;margin:4px 8px 16px}
+aside a{display:block;padding:12px;border-radius:14px;color:var(--ink);text-decoration:none;font-weight:500}
+aside a.on{background:var(--soft)}
+#shade{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:15;display:none}
+dialog{border:0;border-radius:24px 24px 0 0;padding:16px 14px 24px;width:100%;max-width:560px;margin:auto auto 0;background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+.tabs{display:flex;gap:6px;margin:10px 0 4px;overflow-x:auto}
+.tabs button{flex:none;border:0;background:none;color:var(--mute);font:inherit;font-size:14px;font-weight:500;padding:7px 12px;border-radius:999px;cursor:pointer}
+.tabs button.on{background:var(--soft);color:var(--ink)}
+#toast{position:fixed;left:14px;right:14px;bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--btn);color:var(--btn-ink);border-radius:14px;padding:12px 14px;font-size:13px;display:none;z-index:40}
+button.av{border:0;padding:0;cursor:pointer;overflow:hidden;font:inherit;font-weight:700;font-size:13px}
+.av img{width:100%;height:100%;object-fit:cover}
+.row.m .dot{border-radius:12px;width:46px;height:46px}
+.row.m .acts{padding-left:58px}
+.favs{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 8px}
+.fc{flex:none;width:168px;height:206px;border-radius:26px;background:#3a3836 center/cover;position:relative;color:#fff;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:14px}
+.fc::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 35%,rgba(0,0,0,.65))}
+.fc[data-i]::after{content:attr(data-i);position:absolute;top:12px;left:16px;font-size:46px;font-weight:700;opacity:.3}
+.fs,.fp{position:relative}
+.fc b{display:block;font-size:17px}.fc small{opacity:.8;font-size:12px}
+.fp{width:36px;height:36px;border-radius:50%;border:2px solid #fff;background:rgba(255,255,255,.2);color:#fff;margin-top:10px;cursor:pointer;padding:0;font-size:12px}
+.xc{position:relative;margin:0 0 12px 26px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:8px 12px 8px 36px}
+.xa{position:absolute;left:-24px;top:10px}
+.xa .dot{width:50px;height:50px;font-size:19px;border:3px solid var(--bg);box-shadow:0 4px 10px rgba(0,0,0,.18)}
+.xc small{color:var(--mute);font-size:12px;display:block}
+.xp{height:3px;background:var(--line);border-radius:2px;margin:6px 0}
+.xp u{display:block;height:100%;width:0;background:var(--ink);border-radius:2px}
+.xr{display:flex;gap:6px;flex-wrap:wrap}
+.xm{display:flex;gap:10px;margin-top:6px;font-size:11px;color:var(--mute);align-items:center}
+.lnk{background:none;border:0;padding:0;color:var(--ink);font:inherit;font-size:12px;font-weight:600;text-decoration:underline;cursor:pointer}
+.takes{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.takes:empty{display:none}
+.take{flex:none;min-width:0;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 10px 6px 6px}
+.take .pl{width:30px;height:30px;border-radius:50%;border:0;background:var(--btn);color:var(--btn-ink);font-size:10px;flex:none;cursor:pointer;padding:0}
+.tw{flex:1;min-width:0}
+.tw small{display:block;font-size:11px;color:var(--mute);line-height:1.2}
+.wf{display:flex;align-items:center;gap:2px;height:22px}
+.wf i{flex:1;min-width:1px;max-width:4px;border-radius:2px;background:var(--line)}
+.wf i.on{background:var(--ink)}
+.pbanner{height:96px;border-radius:16px;background:linear-gradient(120deg,#555,#999) center/cover}
+.pav{margin:-34px 0 0 14px}
+.pav .dot{width:68px;height:68px;font-size:24px;border:4px solid var(--card)}
+.pn{margin:6px 14px 0;font-size:18px}
+.stats{display:flex;gap:6px;margin:14px 0}
+.stats div{flex:1;text-align:center;background:var(--soft);border-radius:14px;padding:10px 4px}
+.stats span{display:block;color:#E0A100}
+.stats b{display:block;font-size:17px}
+.stats small{color:var(--mute);font-size:12px}
+dialog.ro .edit{display:none}
+.xc b{font-size:14px}.xc small{font-size:11px}
+.xr .ic{padding:5px 10px;font-size:12px}
+.lnk{font-size:11px}
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#121212;--card:#1C1C1C;--ink:#F2F0EE;--mute:#9A948F;--line:#2C2A29;--soft:#262423;--btn:#F2F0EE;--btn-ink:#121212;--danger:#FF8A80;--tag:#7FA8FF}
+.th{display:flex;gap:4px;margin:14px 8px 8px;background:var(--soft);border-radius:999px;padding:4px}
+.th button{flex:1;border:0;background:none;color:var(--mute);font:inherit;font-size:14px;font-weight:500;padding:8px;border-radius:999px;cursor:pointer}
+.th button.on{background:var(--btn);color:var(--btn-ink)}
+:root{--hit:#E8315B}
+:root[data-theme="dark"]{--hit:#FF6B8B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--hit:#FF6B8B}}
+.sbwrap{display:none;gap:8px;margin:6px 0 12px}
+body[data-view="accueil"] .sbwrap,body[data-view="explorer"] .sbwrap,body[data-view="voix"] .sbwrap,body[data-view="historique"] .sbwrap{display:flex}
+.sbar{flex:1;display:flex;align-items:center;gap:8px;background:var(--soft);border:0;border-radius:14px;height:42px;padding:0 12px;color:var(--mute);font:inherit;font-size:14px;text-align:left;cursor:pointer;min-width:0}
+.sbar span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sbar span.has{color:var(--ink)}
+.sbx{width:42px;border:0;border-radius:14px;background:var(--soft);color:var(--ink);cursor:pointer;font-size:18px}
+.sbinfo{color:var(--mute);font-size:13px;margin:-4px 4px 10px}
+.chips.cx{margin:0 0 12px}
+.chips.wrap{flex-wrap:wrap}
+#sr{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+#sr[hidden]{display:none}
+.srh{display:flex;align-items:center;gap:8px;padding:10px 12px}
+.srb{background:none;border:0;color:var(--ink);font-size:24px;padding:4px 6px;cursor:pointer}
+.srp{flex:1;display:flex;align-items:center;gap:8px;background:var(--soft);border-radius:14px;padding:0 10px;height:44px;min-width:0}
+.srp input{flex:1;border:0;background:transparent;font:inherit;font-size:16px;color:var(--ink);outline:0;min-width:0}
+.srx{width:22px;height:22px;border-radius:50%;border:0;background:var(--mute);color:var(--bg);font-size:14px;line-height:1;cursor:pointer;padding:0}
+.srgo{border:0;background:none;color:var(--hit);font:inherit;font-weight:700;font-size:15px;cursor:pointer;padding:6px}
+.srl{flex:1;overflow:auto;padding:4px 12px 24px}
+.sr-row{display:flex;align-items:center;gap:12px;padding:8px 0;cursor:pointer}
+.sr-ic{width:40px;height:40px;border-radius:50%;background:var(--soft);display:grid;place-items:center;flex:none;color:var(--ink)}
+.sr-t{flex:1;min-width:0;font-weight:700;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-t em{font-style:normal;color:var(--hit)}
+.sr-av .dot{width:38px;height:38px}
+.sr-fill{background:none;border:0;color:var(--mute);font-size:20px;padding:6px 8px;cursor:pointer}
+.srt{font-weight:600;font-size:13px;color:var(--mute);margin:16px 4px 8px}
+.sl{font-size:12px;font-weight:700;color:var(--mute);margin:20px 8px 2px;letter-spacing:.04em}
+.sl2{font-size:13px;font-weight:600;margin:12px 8px 0}
+aside .ic{display:block;width:calc(100% - 16px);margin:10px 8px 0;text-align:center;padding:10px}
+.dh{display:flex;align-items:center;gap:8px;margin:2px 2px 12px}
+.dlogo{flex:1;display:flex;align-items:center;gap:8px;min-width:0}
+.dlogo b{margin:0;font-size:18px}
+aside a,aside .mrow{display:flex;align-items:center;gap:12px;padding:11px 12px;font-size:15px}
+aside .i{width:22px;height:22px;flex:none}
+.gl{font-size:12px;color:var(--mute);margin:18px 12px 4px}
+.mr{display:flex;align-items:center}
+.mr a{flex:1}
+.plus{width:32px;height:32px;border-radius:50%;border:0;background:var(--soft);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;margin-right:4px;padding:0}
+.mrow{width:100%;background:none;border:0;border-radius:14px;color:var(--ink);font:inherit;font-size:15px;font-weight:500;cursor:pointer;text-align:left}
+aside a.pill{display:block;text-align:center;margin:22px 4px 8px;padding:14px;border-radius:999px;background:linear-gradient(110deg,#d6dcd8,#f1e4da);color:#161616;font-weight:600;letter-spacing:.04em;font-size:14px}
+.set{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.set:first-child{border-top:0}
+.set b{display:block;font-weight:600;font-size:15px}
+.set small{color:var(--mute);font-size:12px}
+.set .th{margin:0;flex:none}
+.set .th button{padding:7px 12px;font-size:13px}
+.set.col{flex-direction:column;align-items:stretch}
+.set.col .th{width:100%}
+.ta{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px;font:inherit;font-size:15px;background:var(--bg);color:var(--ink);resize:none}
+.xd{margin:4px 0 0;font-size:12.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.xh{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.ht{background:none;border:0;padding:0;color:var(--tag);font:inherit;font-size:12px;cursor:pointer}
+.fx{background:linear-gradient(100deg,var(--ink) 0%,var(--ink) 38%,var(--hit) 50%,var(--ink) 62%,var(--ink) 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:shine 3.6s linear infinite}
+@keyframes shine{from{background-position:150% 0}to{background-position:-110% 0}}
+@keyframes bar{0%,100%{transform:scaleY(.55)}50%{transform:scaleY(1.25)}}
+.lg rect{transform-box:fill-box;transform-origin:50% 50%;animation:bar 1.3s ease-in-out infinite}
+.lg rect:nth-child(2){animation-delay:.15s}.lg rect:nth-child(3){animation-delay:.3s}.lg rect:nth-child(4){animation-delay:.45s}.lg rect:nth-child(5){animation-delay:.6s}
+@media (prefers-reduced-motion:reduce){.fx,.lg rect{animation:none}}
+.hero{margin:6px 4px 14px}
+.hero b{display:block;font-size:32px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.hero small{color:var(--mute);font-size:13px}
+.circ.contact{background:linear-gradient(135deg,#d6dcd8,#f1e4da);border-color:transparent;color:#161616}
+.take .dl{flex:none;width:28px;height:28px;border-radius:50%;border:0;background:var(--soft);color:var(--ink);display:grid;place-items:center;cursor:pointer;padding:0}
+.du{flex:none;font-size:12px;color:var(--mute);min-width:36px;text-align:right}
+a.ic{text-decoration:none;display:inline-block}
+.sel{max-width:46%;border:1px solid var(--line);border-radius:12px;padding:8px;font:inherit;font-size:14px;background:var(--bg);color:var(--ink)}
+.vcues{max-height:260px;overflow:auto}
+.vc{padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.vc:first-child{border:0}
+.vc small{color:var(--mute)}
+.vc b{margin:0 6px;font-weight:600}
+.vc i{font-style:normal;color:var(--hit);font-size:12px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9H4z"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol>
+<symbol id="i-wand" viewBox="0 0 24 24"><path d="M5 19l9-9M14 5l1-2 1 2 2 1-2 1-1 2-1-2-2-1z"/></symbol>
+<symbol id="i-wave" viewBox="0 0 24 24"><path d="M5 9v6M9 5v14M13 8v8M17 6v12M21 10v4"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><path d="M4 12a8 8 0 108-8M4 4v4h4M12 8v4l3 2"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+<symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></symbol>
+</svg>
+<header>
+  <button class="circ" id="menu" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="14" rx="3"/><path d="M9 5v14"/></svg></button>
+  <h3 id="title">Accueil</h3>
+  <a class="circ contact" href="https://whatsapp.com/channel/0029Vb7Ibg5002T79MWH2r1p" target="_blank" rel="noopener noreferrer" aria-label="Nous contacter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0116 0v2"/><path d="M4 14a2 2 0 012-2h1v6H6a2 2 0 01-2-2zM20 14a2 2 0 00-2-2h-1v6h1a2 2 0 002-2z"/></svg></a>
+  <div class="team"><span>Mon équipe</span> <i>Gratuit</i><button class="av" id="avBtn" aria-label="Mon profil">H</button></div>
+</header>
+
+<aside id="drawer">
+  <div class="dh">
+    <div class="dlogo"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--btn)"/><g class="lg" fill="var(--btn-ink)"><rect x="5" y="12" width="3" height="8" rx="1.5"/><rect x="10" y="8" width="3" height="16" rx="1.5"/><rect x="15" y="11" width="3" height="10" rx="1.5"/><rect x="20" y="9" width="3" height="14" rx="1.5"/><rect x="25" y="13" width="3" height="6" rx="1.5"/></g></svg><b class="fx">Hes audio</b></div>
+    <button class="circ" id="thBtn" aria-label="Changer de thème">☀</button>
+    <button class="circ" id="closeDr" aria-label="Fermer le menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="14" rx="3"/><path d="M15 5v14"/></svg></button>
+  </div>
+  <a href="#accueil" data-v="accueil"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-home"/></svg>Accueil</a>
+  <p class="gl">Voix</p>
+  <div class="mr"><a href="#voix" data-v="voix"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-mic"/></svg>Mes voix</a><button class="plus" data-go="creer" aria-label="Créer une voix">+</button></div>
+  <a href="#explorer" data-v="explorer"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-compass"/></svg>Bibliothèque de voix</a>
+  <a href="#creer" data-v="creer"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-wand"/></svg>Créer une voix</a>
+  <p class="gl">Produits</p>
+  <a href="#parler" data-v="parler"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-wave"/></svg>Texte en voix</a>
+  <a href="#video" data-v="video"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-film"/></svg>Vidéo en voix</a>
+  <p class="gl">Plateforme</p>
+  <a href="#historique" data-v="historique"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-clock"/></svg>Historique des générations</a>
+  <a href="#parametres" data-v="parametres"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-gear"/></svg>Paramètres</a>
+  <p class="gl">Compte</p>
+  <button class="mrow" id="myProf"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-user"/></svg>Mon profil</button>
+  <a class="pill" href="https://whatsapp.com/channel/0029Vb7Ibg5002T79MWH2r1p" target="_blank" rel="noopener noreferrer">NOUS CONTACTER</a>
+</aside>
+<div id="shade"></div>
+
+<main>
+  <div class="sbwrap"><button class="sbar" id="sbar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span id="sbTxt">Rechercher…</span></button><button class="sbx" id="sbx" aria-label="Effacer la recherche" hidden>×</button></div>
+  <p class="sbinfo" id="sbinfo" hidden></p>
+  <section class="view on" id="v-accueil">
+    <div class="hero"><b class="fx">Hes audio</b><small>Écris, choisis une voix, écoute.</small></div>
+    <div class="grid" style="margin-top:8px">
+      <button class="tile" data-go="parler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 9v6M9 5v14M13 8v8M17 6v12M21 10v4"/></svg>Texte en voix</button>
+      <button class="tile" data-go="creer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Créer une voix</button>
+      <button class="tile" data-go="voix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>Mes voix</button>
+      <button class="tile" data-go="historique"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12a8 8 0 108-8M4 4v4h4M12 8v4l3 2"/></svg>Historique</button>
+    </div>
+    <button class="tile" data-go="video" style="width:100%;min-height:64px;margin-top:10px">Vidéo en voix (sous-titres)</button>
+    <button class="tile" data-go="explorer" style="width:100%;min-height:64px;margin-top:10px">Explorer les voix publiées</button>
+    <h2>Dernières générations</h2>
+    <div class="panel" id="recent"></div>
+  </section>
+
+  <section class="view" id="v-parler">
+    <div class="warn" id="warn">Ce navigateur n’a aucune voix installée, donc rien ne sort. Ouvre la page dans Chrome, ou installe un moteur de synthèse vocale dans les réglages du téléphone.</div>
+    <div class="panel">
+      <button class="vbtn" id="pick"><span id="pickAv"></span><span id="pickName">Léa</span> ▾</button>
+      <div class="ed"><div class="hl" id="hl" aria-hidden="true"></div><textarea id="txt" maxlength="5000" spellcheck="false" placeholder="Écris ton texte. Ajoute [crie], [pleure], [chuchote]… devant une phrase pour changer l’émotion."></textarea></div>
+      
+      
+    </div>
+    
+  </section>
+
+  <section class="view" id="v-voix">
+    <h2 style="margin-top:8px">Favoris</h2>
+    <div class="favs" id="favs"></div>
+    <h2>Toutes mes voix</h2>
+    <div class="panel" id="mine"></div>
+    <p class="note">Touche la photo d’une voix pour la changer.</p>
+    <p><button class="btn" data-go="creer">Créer une voix</button></p>
+  </section>
+
+  <section class="view" id="v-creer">
+    <h2 style="margin-top:8px">Créer une voix</h2>
+    <div class="panel">
+      <p style="margin:0">Envoie un enregistrement ou une vidéo où <b>ta voix</b> (ou celle d’une personne d’accord) parle seule. L’appli garde la voix et enlève une partie du bruit.</p>
+      <label class="drop"><input type="file" id="file" accept="audio/*,video/*">Choisir un fichier audio ou vidéo</label>
+      <button class="btn ghost" id="rec" style="width:100%">Enregistrer avec le micro</button>
+      <p class="note" id="stat"></p>
+      <audio id="player" controls hidden></audio>
+      <label class="f" for="vn">Nom de la voix</label>
+      <input type="text" id="vn" maxlength="30" placeholder="Ex. Ma voix">
+      <label class="f">Catégorie</label><div class="chips wrap" id="vcats"></div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:14px"><span id="newAv"></span><button class="btn ghost" id="addPh">Ajouter une photo (facultatif)</button></div>
+      <label class="chk"><input type="checkbox" id="ok"><span>Cette voix est la mienne, ou la personne m’a donné son accord pour l’utiliser.</span></label>
+      <button class="btn" id="save" disabled>Enregistrer la voix</button>
+    </div>
+    
+    
+  </section>
+
+  <section class="view" id="v-explorer">
+    <h2 style="margin-top:8px">Explorer</h2>
+    <p class="note" id="xnote"></p>
+    <div class="chips cx" id="cats"></div>
+    <div id="xlist"></div>
+  </section>
+
+  <section class="view" id="v-video">
+    <h2 style="margin-top:8px">Vidéo en voix</h2>
+    <div class="panel">
+      <p style="margin:0;font-size:14px">Envoie une vidéo avec ses sous-titres. Le site les lit avec des voix, une par personne, et change le ton selon l’émotion.</p>
+      <label class="drop"><input type="file" id="vfile" accept="video/*">Choisir la vidéo</label>
+      <label class="drop"><input type="file" id="vsub" accept=".srt,.vtt,text/vtt,text/plain">Ajouter les sous-titres (.srt ou .vtt)</label>
+      <label class="f" for="vtxt">Ou colle les sous-titres ici</label>
+      <textarea class="ta" id="vtxt" rows="4" placeholder="00:00:01,000 --> 00:00:03,000&#10;- Salut, ça va ?&#10;- Oui, super !"></textarea>
+      <button class="btn" id="vgo" style="margin-top:10px;width:100%">Analyser</button>
+      <p class="note" id="vstat"></p>
+    </div>
+    <div id="vres" hidden>
+      <video id="vid" controls playsinline muted style="width:100%;border-radius:16px;margin:12px 0 4px;background:#000"></video>
+      <label class="chk"><input type="checkbox" id="vkeep"><span>Garder le son d’origine de la vidéo</span></label>
+      <h2>Voix</h2>
+      <div class="panel" id="vsp"></div>
+      <h2>Sous-titres lus</h2>
+      <div class="panel vcues" id="vcues"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-parametres">
+    <h2 style="margin-top:8px">Apparence</h2>
+    <div class="panel">
+      <div class="set"><div><b>Thème</b><small>Jour ou nuit</small></div><div class="th"><button data-th="light">Jour</button><button data-th="dark">Nuit</button></div></div>
+      <div class="set col"><div><b>Taille du texte</b><small>Petit ou grand</small></div><div class="th"><button data-sz="0.9">Petit</button><button data-sz="1">Normal</button><button data-sz="1.15">Grand</button></div></div>
+    </div>
+    <h2>Lecture</h2>
+    <div class="panel">
+      <div class="set col"><div><b>Vitesse de la voix</b><small>Pour toutes les voix</small></div><div class="th"><button data-sp="0.85">Lent</button><button data-sp="1">Normal</button><button data-sp="1.2">Rapide</button></div></div>
+      <div class="set"><div><b>Lecture automatique</b><small>Joue la 1re version après Générer</small></div><div class="th"><button data-au="0">Non</button><button data-au="1">Oui</button></div></div>
+    </div>
+    <h2>Connexion en ligne</h2>
+    <div class="panel">
+      <p class="note" id="fbStat" style="margin:0 0 4px"></p>
+      <label class="f" for="fbKey">Clé API (apiKey)</label>
+      <input type="text" id="fbKey" autocomplete="off" placeholder="AIza…">
+      <label class="f" for="fbUrl">Adresse de la base (databaseURL)</label>
+      <input type="text" id="fbUrl" autocomplete="off" placeholder="https://ton-projet-default-rtdb.firebaseio.com">
+      <button class="btn" id="fbGo" style="margin-top:12px;width:100%">Connecter</button>
+      <p class="note">Pour que tes amis soient connectés aussi, colle les mêmes valeurs en haut du fichier, à l’endroit marqué CONNEXION FIREBASE.</p>
+    </div>
+    <h2>Boutique et communauté</h2>
+    <div class="panel">
+      <div class="set"><div><b>Boutique</b><small>HE’S SHOP</small></div><a class="ic" href="https://he-s-shop-v2.skyhost.tech/" target="_blank" rel="noopener noreferrer">Boutique</a></div>
+      <div class="set"><div><b>Telegram</b><small>Notre chaîne</small></div><a class="ic" href="https://t.me/PRlME_PURGE_TECH" target="_blank" rel="noopener noreferrer">Ouvrir</a></div>
+      <div class="set"><div><b>Portfolio</b><small>No Name Tech</small></div><a class="ic" href="https://no-name-tech-murex.vercel.app/" target="_blank" rel="noopener noreferrer">Ouvrir</a></div>
+      <div class="set"><div><b>Assistant</b><small>GOD_NO_NAME</small></div><button class="ic" data-copy="GOD_NO_NAME">Copier le nom</button></div>
+    </div>
+    <h2>Données</h2>
+    <div class="panel">
+      <div class="set"><div><b>Historique</b><small>Efface tes générations</small></div><button class="ic" data-clr="hist">Effacer</button></div>
+      <div class="set"><div><b>Recherches</b><small>Efface les recherches récentes</small></div><button class="ic" data-clr="rec">Effacer</button></div>
+      <div class="set"><div><b>Tout réinitialiser</b><small>Voix, profil et réglages</small></div><button class="ic del" data-clr="all">Réinitialiser</button></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-historique">
+    <h2 style="margin-top:8px">Historique</h2>
+    <div class="panel" id="hist"></div>
+  </section>
+</main>
+
+<div class="dock" id="dock"><div class="dockin"><div class="takes" id="takes"></div><div class="bar"><button class="btn" id="gen">Générer</button></div><div class="chips" id="chips"></div></div></div>
+
+<input type="file" id="ph" accept="image/*" hidden>
+
+<dialog id="pickDlg">
+  <b style="font-size:18px">Choisir une voix</b>
+  <div class="tabs"><button class="on" data-t="lib">Par défaut</button><button data-t="own">Mes voix</button><button data-t="pub">Publiques</button></div>
+  <input type="text" id="pkq" placeholder="Rechercher une voix…" autocomplete="off" style="margin:8px 0 2px">
+  <div id="pickList"></div>
+</dialog>
+
+<dialog id="pubDlg">
+  <b style="font-size:18px">Publier cette voix ?</b>
+  <label class="f" for="pubDesc">Description</label>
+  <textarea class="ta" id="pubDesc" maxlength="200" rows="3" placeholder="Ex. Voix douce et calme pour raconter des histoires #douce #narration"></textarea>
+  <p class="note">Les # aident les autres à trouver ta voix.</p>
+  <p class="note" style="font-size:14px">Tout le monde pourra l’utiliser. Publie seulement une voix qui est la tienne, ou dont la personne est d’accord.</p>
+  <p class="note" id="pubNote"></p>
+  <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px"><button class="btn ghost" id="pubNo">Annuler</button><button class="btn" id="pubYes">Publier</button></div>
+</dialog>
+<dialog id="profDlg" class="ro">
+  <div id="pWel" hidden><b style="font-size:20px">Bienvenue sur <span class="fx">Hes audio</span></b><p class="note" style="font-size:14px">Dis-nous comment tu t’appelles. La photo et la bannière sont facultatives.</p></div>
+  <div class="pbanner" id="pBanner"></div>
+  <div class="pav" id="pAv"></div>
+  <div class="pn"><b id="pName"></b></div>
+  <div class="stats">
+    <div><span>★</span><b id="sStar">0.0</b><small>Note</small></div>
+    <div><span style="color:#3B7DD8">⚑</span><b id="sVoix">0</b><small>Voix</small></div>
+    <div><span style="color:#8B5CF6">◷</span><b id="sVues">0</b><small>Vues</small></div>
+  </div>
+  <div class="edit">
+    <label class="f" for="pIn">Ton nom</label>
+    <input type="text" id="pIn" maxlength="24">
+    <div style="display:flex;gap:8px;margin:12px 0"><button class="btn ghost" id="pPhBtn">Changer la photo</button><button class="btn ghost" id="pBnBtn">Changer la bannière</button></div>
+    <button class="btn" id="pSave" style="width:100%">Enregistrer</button>
+  </div>
+  <p class="note">La note est calculée par le site, selon le nombre d’écoutes de tes voix.</p>
+</dialog>
+<input type="file" id="bn" accept="image/*" hidden>
+<div id="sr" hidden>
+  <div class="srh">
+    <button class="srb" id="srBack" aria-label="Retour">←</button>
+    <div class="srp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="srIn" type="search" placeholder="Rechercher" autocomplete="off" autocapitalize="off" enterkeyhint="search"><button class="srx" id="srClr" aria-label="Effacer" hidden>×</button></div>
+    <button class="srgo" id="srGo">Rechercher</button>
+  </div>
+  <div class="srl" id="srList"></div>
+</div>
+<div id="toast"></div>
+
+<script>
+/* ===== CONNEXION FIREBASE =====
+   Colle ici tes 2 valeurs Firebase (apiKey et databaseURL), puis enregistre le fichier.
+   Exemple : window.HES_FIREBASE={apiKey:"AIza...",databaseURL:"https://ton-projet-default-rtdb.firebaseio.com"}; */
+window.HES_FIREBASE={apiKey:"",databaseURL:""};
+</script>
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)};
+var LIB=[
+ {id:"lea",name:"Léa",tag:"Claire et vive",pitch:1.25,rate:1.05},
+ {id:"hugo",name:"Hugo",tag:"Posé et chaleureux",pitch:.85,rate:.98},
+ {id:"nora",name:"Nora",tag:"Douce, pour la narration",pitch:1.1,rate:.92},
+ {id:"max",name:"Max",tag:"Grave et énergique",pitch:.6,rate:1.1}
+];
+var EMO={triste:{l:"Triste",p:.82,r:.8,v:.75},colere:{l:"Énervé",p:1.05,r:1.22,v:1},joie:{l:"Joyeux",p:1.2,r:1.1,v:1},peur:{l:"Peur",p:1.3,r:1.25,v:.8},calme:{l:"Calme",p:1,r:1,v:.9},crie:{l:"Cri",p:1.15,r:1.25,v:1},chuchote:{l:"Chuchoté",p:.95,r:.85,v:.35}};
+var KW={
+ triste:["triste","pleure","seul","mort","perdu","manque","malheur","desole","helas","larmes","deprim","emu"],
+ colere:["enerve","colere","furieux","marre","deteste","ras le bol","ferme","stupide","arrete","rage"],
+ joie:["content","heureux","super","genial","bravo","youpi","adore","trop bien","haha","mdr","merci","incroyable"],
+ peur:["peur","au secours","danger","terrifi","panique","a l'aide","effray"]
+};
+var TAGS={triste:"triste",pleure:"triste",pleurer:"triste",emu:"triste",soupire:"triste",enerve:"colere",colere:"colere",crie:"crie",crier:"crie",hurle:"crie",joyeux:"joie",content:"joie",joie:"joie",rit:"joie",rire:"joie",peur:"peur",tremble:"peur",calme:"calme",chuchote:"chuchote",murmure:"chuchote"};
+var mine=[],hist=[],sel="lea",tab="lib",force="auto",samples={},newPhoto="",photoFor="",pubId="",cleanUrl=null,profile={name:"Hes",photo:"",banner:""},favs=[],use={},takes=[],remote=[],authors={},DB=null,UID=null,CANW=null,viewA=null;
+function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function store(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast("Mémoire pleine : une photo n’a pas pu être gardée.")}}
+mine=load("hes-mine",[]);hist=load("hes-hist",[]);profile=load("hes-profile",profile);favs=load("hes-favs",[]);use=load("hes-use",{});
+function get(id){return LIB.concat(mine,remote).filter(function(v){return v.id===id})[0]||LIB[0]}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function dot(v){return v.photo?'<img class="dot" alt="" src="'+v.photo+'">':'<span class="dot">'+esc(v.name.charAt(0).toUpperCase())+'</span>'}
+function toast(m){var t=$("#toast");t.textContent=m;t.style.display="block";clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display="none"},4200)}
+function norm(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+
+/* émotions : un [mot] change l’émotion jusqu’au prochain [mot] */
+function detect(s0){
+ var s=norm(s0),best="calme",score=0;
+ Object.keys(KW).forEach(function(k){var c=0;KW[k].forEach(function(w){if(s.indexOf(w)>-1)c++});if(c>score){score=c;best=k}});
+ if(score)return best;
+ if(/[A-Z]{4,}/.test(s0)||(s0.match(/!/g)||[]).length>=2)return "colere";
+ if(/(\.\.\.|…)\s*$/.test(s0))return "triste";
+ if(/!/.test(s0))return "joie";
+ return "calme";
+}
+function split(t){return t.match(/[^.!?…\n]+[.!?…]*/g)||[]}
+function speak(text,v){
+ if(!("speechSynthesis" in window)){toast("Ce navigateur ne sait pas lire à voix haute.");return ""}
+ speechSynthesis.cancel();
+ var fr=speechSynthesis.getVoices().filter(function(x){return /^fr/i.test(x.lang)})[0],cur=null,used=[];
+ text.split(/(\[[^\]\n]+\])/).forEach(function(part){
+  var m=part.match(/^\[([^\]\n]+)\]$/);
+  if(m){var tk=TAGS[norm(m[1]).trim()];if(tk)cur=tk;return}
+  split(part).forEach(function(sn){
+   var clean=sn.trim();if(!clean||!/[\p{L}\p{N}]/u.test(clean))return;
+   var k=cur||(force==="auto"?detect(sn):force),e=EMO[k];if(used.indexOf(e.l)<0)used.push(e.l);
+   var u=new SpeechSynthesisUtterance(clean);u.lang="fr-FR";if(fr)u.voice=fr;
+   u.pitch=Math.min(2,Math.max(.1,v.pitch*e.p));u.rate=Math.min(1.8,Math.max(.5,v.rate*e.r*cfg.spd));u.volume=e.v;
+   u.onerror=function(ev){if(ev.error!=="canceled"&&ev.error!=="interrupted")toast("La voix n’a pas pu démarrer. Vérifie qu’une synthèse vocale est installée.")};
+   speechSynthesis.speak(u);
+  });
+ });
+ return used.join(", ");
+}
+function checkVoices(){$("#warn").style.display=(!("speechSynthesis" in window)||speechSynthesis.getVoices().length===0)?"block":"none"}
+if("speechSynthesis" in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=checkVoices;setTimeout(checkVoices,1500)}
+
+/* navigation */
+var TITLES={accueil:"Accueil",explorer:"Explorer",parametres:"Paramètres",video:"Vidéo en voix",parler:"Texte en voix",voix:"Mes voix",creer:"Créer une voix",historique:"Historique"};
+function drawer(o){$("#drawer").classList.toggle("open",o);$("#shade").style.display=o?"block":"none"}
+$("#menu").onclick=function(){drawer(true)};$("#shade").onclick=function(){drawer(false)};
+function route(){
+ var v=location.hash.replace("#","")||"accueil";if(!TITLES[v])v="accueil";
+ document.querySelectorAll(".view").forEach(function(e){e.classList.toggle("on",e.id==="v-"+v)});
+ document.querySelectorAll("aside a[data-v]").forEach(function(a){a.classList.toggle("on",a.dataset.v===v)});
+ $("#title").textContent=TITLES[v];document.body.dataset.view=v;updSearchUI();drawer(false);window.scrollTo(0,0);
+}
+window.addEventListener("hashchange",route);
+
+/* rendu */
+function renderHist(el,limit){
+ var list=limit?hist.slice(0,limit):hist;
+ if(!list.length){el.innerHTML='<div class="empty">Rien pour l’instant. Écris ta première phrase dans « Texte en voix ».</div>';return}
+ el.innerHTML=list.map(function(h,i){var v=get(h.v);if(!limit&&Q.historique&&!match(Q.historique,v.name+" "+h.t))return "";
+  return '<div class="row">'+dot(v)+'<div class="t"><b>'+esc(v.name)+'</b><span>'+esc(h.t)+'</span></div><button class="ic" data-p="'+i+'">Écouter</button>'+(limit?'':'<button class="ic del" data-d="'+i+'">Suppr.</button>')+'</div>'}).join("");
+}
+function renderMine(){
+ var el=$("#mine");
+ if(!mine.length){el.innerHTML='<div class="empty">Aucune voix pour l’instant.</div>';return}
+ el.innerHTML=mine.map(function(v,i){if(!match(Q.voix,hay(v)))return "";return '<div class="row m"><button class="avb" data-ph="'+v.id+'" aria-label="Changer la photo">'+dot(v)+'</button><div class="t"><b>'+esc(v.name)+'</b><span>'+(v.pub?'Publique':'Privée')+'</span></div><div class="acts">'+(samples[v.id]?'<button class="ic" data-e="'+v.id+'">Extrait</button>':'')+'<button class="ic" data-fav="'+v.id+'">'+(isFav(v.id)?'♥':'♡')+'</button><button class="ic" data-pub="'+v.id+'">'+(v.pub?'Retirer':'Public')+'</button><button class="ic del" data-x="'+i+'">Suppr.</button></div></div>'}).join("");
+}
+function renderNew(){$("#newAv").innerHTML=newPhoto?'<img class="dot" alt="" src="'+newPhoto+'">':'<span class="dot">+</span>'}
+function renderAll(){var v=get(sel);$("#pickAv").innerHTML=dot(v);$("#pickName").textContent=v.name;renderHist($("#recent"),3);renderHist($("#hist"),0);renderMine();renderNew();renderAv();renderFavs();renderExplore();renderVcats();updSearchUI();updFb()}
+
+document.addEventListener("click",function(e){
+ var t=e.target.closest("button");if(!t)return;var d=t.dataset;
+ if(d.go)location.hash=d.go;
+ if(d.p!==undefined){var h=hist[+d.p];speak(h.t,get(h.v))}
+ if(d.d!==undefined){hist.splice(+d.d,1);store("hes-hist",hist);renderAll()}
+ if(d.x!==undefined){var id=mine[+d.x].id;mine.splice(+d.x,1);delete samples[id];if(sel===id)sel="lea";store("hes-mine",mine);renderAll();syncShare()}
+ if(d.e){var p=$("#player");p.src=samples[d.e];p.hidden=false;p.play();location.hash="creer"}
+ if(d.ph){photoFor=d.ph;$("#ph").click()}
+ if(d.th)setTheme(d.th,true);
+ if(d.cat!==undefined){catSel=d.cat;if(!$("#sr").hidden){closeSearch();location.hash="explorer"}renderAll()}
+ if(d.vc!==undefined){newCat=d.vc;renderVcats()}
+ if(d.tag){Q.explorer="#"+d.tag;if(document.body.dataset.view!=="explorer")location.hash="explorer";renderAll()}
+ if(d.sz){cfg.size=+d.sz;saveCfg()}
+ if(d.sp){cfg.spd=+d.sp;saveCfg()}
+ if(d.au){cfg.auto=d.au==="1";saveCfg()}
+ if(d.clr)clearData(d.clr,t);
+ if(d.demo)demo(d.demo);
+ if(d.use){sel=d.use;renderAll();location.hash="parler"}
+ if(d.fav){var fi=favs.indexOf(d.fav);if(fi>-1)favs.splice(fi,1);else favs.push(d.fav);store("hes-favs",favs);renderAll()}
+ if(d.author)openProf(false,d.author);
+ if(d.take!==undefined)playTake(+d.take);
+ if(d.dl!==undefined)downloadTake(+d.dl);
+ if(d.copy)copyText(d.copy);
+ if(d.pub){var v=get(d.pub);if(v.pub){v.pub=false;store("hes-mine",mine);renderAll();syncShare()}else{pubId=d.pub;$("#pubDesc").value=v.desc||"";pubNoteUpd();$("#pubDlg").showModal()}}
+});
+$("#pubNo").onclick=function(){$("#pubDlg").close()};
+$("#pubYes").onclick=function(){var v=get(pubId);v.pub=true;setDesc(v,$("#pubDesc").value);store("hes-mine",mine);renderAll();$("#pubDlg").close();toast(shareMsg());syncShare()};
+
+/* photos de voix */
+function shrink(file){return new Promise(function(ok,ko){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var c=document.createElement("canvas");c.width=c.height=128;var s=Math.min(im.width,im.height);c.getContext("2d").drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,128,128);ok(c.toDataURL("image/jpeg",.82))};im.onerror=ko;im.src=r.result};r.onerror=ko;r.readAsDataURL(file)})}
+$("#addPh").onclick=function(){photoFor="new";$("#ph").click()};
+$("#ph").onchange=async function(){
+ var f=this.files[0];this.value="";if(!f)return;var u;
+ try{u=await shrink(f)}catch(e){toast("Photo illisible.");return}
+ if(photoFor==="new"){newPhoto=u;renderNew()}else if(photoFor==="prof"){profile.photo=u;store("hes-profile",profile);renderAll();fillProf()}else{var v=get(photoFor);v.photo=u;store("hes-mine",mine);renderAll();syncShare()}
+};
+
+/* texte en voix */
+var txt=$("#txt"),gen=$("#gen");
+function sync(){$("#hl").innerHTML=esc(txt.value).replace(/\[[^\]\n]*\]/g,"<b>$&</b>")+"\n";gen.disabled=!txt.value.trim()}
+txt.oninput=sync;sync();
+$("#chips").innerHTML=[["auto","Auto"],["triste","Triste"],["colere","Énervé"],["joie","Joyeux"],["peur","Peur"],["calme","Calme"]].map(function(c){return '<button class="chip'+(c[0]==="auto"?' on':'')+'" data-f="'+c[0]+'">'+c[1]+'</button>'}).join("");
+$("#chips").onclick=function(e){var f=e.target.dataset.f;if(!f)return;force=f;document.querySelectorAll(".chip").forEach(function(c){c.classList.toggle("on",c.dataset.f===f)})};
+gen.onclick=function(){
+ var t=txt.value.trim();if(!t)return;
+ var used=speak(t,get(sel));
+ $("#emo").textContent=used?"Émotion lue : "+used:"";
+ hist.unshift({v:sel,t:t});hist=hist.slice(0,30);store("hes-hist",hist);renderAll();
+};
+
+/* choix de voix */
+function renderList(){
+ var list=tab==="lib"?LIB:tab==="own"?mine:mine.filter(function(v){return v.pub}).concat(remote.filter(function(v){return v.authorId!==UID})),el=$("#pickList");list=list.filter(function(v){return match($("#pkq").value,hay(v))});
+ if(!list.length){el.innerHTML='<div class="empty">'+(tab==="pub"?'Aucune voix publique pour l’instant.':'Tu n’as pas encore créé de voix.')+'</div>';return}
+ el.innerHTML=list.map(function(v){return '<div class="row">'+dot(v)+'<div class="t"><b>'+esc(v.name)+'</b><span>'+esc(v.tag||"Ta voix")+'</span></div><button class="btn ghost" data-s="'+v.id+'">Choisir</button></div>'}).join("");
+}
+function tabs(){document.querySelectorAll(".tabs button").forEach(function(b){b.classList.toggle("on",b.dataset.t===tab)})}
+$("#pick").onclick=function(){tab="lib";$("#pkq").value="";tabs();renderList();$("#pickDlg").showModal()};
+document.querySelectorAll(".tabs button").forEach(function(b){b.onclick=function(){tab=b.dataset.t;tabs();renderList()}});
+$("#pickList").onclick=function(e){var id=e.target.dataset.s;if(id){sel=id;renderAll();$("#pickDlg").close()}};
+["pickDlg","pubDlg"].forEach(function(id){$("#"+id).addEventListener("click",function(e){if(e.target===this)this.close()})});
+
+/* créer une voix : extraction + nettoyage */
+function wav(data,sr){
+ var b=new ArrayBuffer(44+data.length*2),d=new DataView(b);
+ function w(o,s){for(var i=0;i<s.length;i++)d.setUint8(o+i,s.charCodeAt(i))}
+ w(0,"RIFF");d.setUint32(4,36+data.length*2,true);w(8,"WAVEfmt ");d.setUint32(16,16,true);d.setUint16(20,1,true);d.setUint16(22,1,true);
+ d.setUint32(24,sr,true);d.setUint32(28,sr*2,true);d.setUint16(32,2,true);d.setUint16(34,16,true);w(36,"data");d.setUint32(40,data.length*2,true);
+ for(var i=0;i<data.length;i++){var s=Math.max(-1,Math.min(1,data[i]));d.setInt16(44+i*2,s<0?s*32768:s*32767,true)}
+ return new Blob([b],{type:"audio/wav"});
+}
+async function clean(ab){
+ var AC=window.AudioContext||window.webkitAudioContext,ctx=new AC();
+ var buf=await ctx.decodeAudioData(ab);ctx.close&&ctx.close();
+ var sr=buf.sampleRate,n=Math.min(buf.length,sr*60),mono=new Float32Array(n),i,j,w,c;
+ for(c=0;c<buf.numberOfChannels;c++){var ch=buf.getChannelData(c);for(i=0;i<n;i++)mono[i]+=ch[i]/buf.numberOfChannels}
+ var off=new OfflineAudioContext(1,n,sr),src=off.createBufferSource(),ab2=off.createBuffer(1,n,sr);ab2.copyToChannel(mono,0);src.buffer=ab2;
+ var hp=off.createBiquadFilter();hp.type="highpass";hp.frequency.value=100;
+ var lp=off.createBiquadFilter();lp.type="lowpass";lp.frequency.value=7500;
+ src.connect(hp);hp.connect(lp);lp.connect(off.destination);src.start();
+ var out=(await off.startRendering()).getChannelData(0).slice();
+ var win=Math.floor(sr*.02),nw=Math.floor(out.length/win),rms=[];
+ for(w=0;w<nw;w++){var s=0;for(j=0;j<win;j++){var x=out[w*win+j];s+=x*x}rms.push(Math.sqrt(s/win))}
+ var sorted=rms.slice().sort(function(a,b){return a-b}),thr=sorted[Math.floor(nw*.1)]*2.5+.002,g=1;
+ for(w=0;w<nw;w++){g=g*.6+(rms[w]>thr?1:.08)*.4;for(j=0;j<win;j++)out[w*win+j]*=g}
+ var peak=0;for(i=0;i<out.length;i++)peak=Math.max(peak,Math.abs(out[i]));
+ if(peak>0)for(i=0;i<out.length;i++)out[i]*=.9/peak;
+ return wav(out,sr);
+}
+/* plan B : lecture en temps réel, marche avec tout ce que le navigateur sait lire */
+async function fromPlayback(file){
+ var AC=window.AudioContext||window.webkitAudioContext,ctx=new AC();await ctx.resume();
+ var url=URL.createObjectURL(file),el=document.createElement("video");el.src=url;el.playsInline=true;el.preload="auto";
+ await new Promise(function(ok,ko){el.onloadedmetadata=ok;el.onerror=function(){ko(new Error("format non lisible"))}});
+ var dur=Math.min(isFinite(el.duration)?el.duration:60,60);
+ var src=ctx.createMediaElementSource(el),hp=ctx.createBiquadFilter(),lp=ctx.createBiquadFilter(),dest=ctx.createMediaStreamDestination();
+ hp.type="highpass";hp.frequency.value=100;lp.type="lowpass";lp.frequency.value=7500;
+ src.connect(hp);hp.connect(lp);lp.connect(dest);
+ var rec=new MediaRecorder(dest.stream),parts=[];
+ rec.ondataavailable=function(e){parts.push(e.data)};
+ var done=new Promise(function(ok){rec.onstop=ok});
+ rec.start();await el.play();
+ var timer=setInterval(function(){$("#stat").textContent="Lecture de la vidéo… "+Math.round(el.currentTime)+" / "+Math.round(dur)+" s"},500);
+ await new Promise(function(ok){el.onended=ok;setTimeout(ok,dur*1000+800)});
+ clearInterval(timer);el.pause();rec.stop();await done;ctx.close();URL.revokeObjectURL(url);
+ return new Blob(parts,{type:rec.mimeType});
+}
+async function handle(file){
+ var blob=null;cleanUrl=null;$("#stat").textContent="Extraction de la voix…";
+ try{
+  if(file.size>80e6)throw new Error("gros fichier");
+  blob=await clean(await file.arrayBuffer());
+ }catch(e1){
+  try{
+   $("#stat").textContent="Lecture de la vidéo en direct (60 secondes maximum)…";
+   var raw=await fromPlayback(file);
+   try{blob=await clean(await raw.arrayBuffer())}catch(e){blob=raw}
+  }catch(e2){$("#stat").textContent="Impossible de lire ce fichier ("+(e2.message||e2)+"). Essaie un autre format ou une vidéo plus courte.";upd();return}
+ }
+ if(!blob||blob.size<2000){$("#stat").textContent="Aucun son trouvé dans ce fichier.";upd();return}
+ cleanUrl=URL.createObjectURL(blob);
+ var p=$("#player");p.src=cleanUrl;p.hidden=false;
+ $("#stat").textContent="Voix extraite. Écoute le résultat avant d’enregistrer.";upd();
+}
+$("#file").onchange=function(){var f=this.files[0];if(f)handle(f)};
+var mr=null,chunks=[];
+$("#rec").onclick=async function(){
+ var b=this;
+ if(mr&&mr.state==="recording"){mr.stop();return}
+ try{
+  var st=await navigator.mediaDevices.getUserMedia({audio:true});
+  mr=new MediaRecorder(st);chunks=[];
+  mr.ondataavailable=function(e){chunks.push(e.data)};
+  mr.onstop=function(){st.getTracks().forEach(function(t){t.stop()});b.textContent="Enregistrer avec le micro";handle(new Blob(chunks,{type:mr.mimeType}))};
+  mr.start();b.textContent="Arrêter l’enregistrement";
+ }catch(e){toast("Le micro n’est pas autorisé sur cette page.")}
+};
+function upd(){$("#save").disabled=!(cleanUrl&&$("#ok").checked&&$("#vn").value.trim())}
+$("#ok").onchange=$("#vn").oninput=upd;
+$("#save").onclick=function(){
+ var id="m"+Date.now();
+ mine.push({id:id,name:$("#vn").value.trim(),pitch:1,rate:1,photo:newPhoto,pub:false,cat:newCat||"Autre"});
+ samples[id]=cleanUrl;cleanUrl=null;newPhoto="";newCat="";store("hes-mine",mine);
+ $("#vn").value="";$("#ok").checked=false;$("#player").hidden=true;$("#stat").textContent="";upd();renderAll();location.hash="voix";
+ toast("Voix enregistrée. L’extrait reste sur cette page tant qu’elle est ouverte.");
+};
+
+/* ---- profil, favoris, explorer, deux versions audio ---- */
+function clamp(x,a,b){return Math.min(b,Math.max(a,x))}
+function fmt(n){if(n<1000)return String(n);var k=n<1e6,v=n/(k?1e3:1e6);return (v<10?Math.floor(v*10)/10:Math.floor(v))+(k?"k":"m")}
+function totalUse(){return mine.reduce(function(a,v){return a+(use[v.id]||0)},0)}
+function stars(n){return Math.min(5,Math.log10(1+n)*1.7).toFixed(1)}
+function isFav(id){return favs.indexOf(id)>-1}
+function author(){return profile.name||"Hes"}
+function shrinkTo(file,w,h){return new Promise(function(ok,ko){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var c=document.createElement("canvas");c.width=w;c.height=h;var s=Math.max(w/im.width,h/im.height),sw=w/s,sh=h/s;c.getContext("2d").drawImage(im,(im.width-sw)/2,(im.height-sh)/2,sw,sh,0,0,w,h);ok(c.toDataURL("image/jpeg",.8))};im.onerror=ko;im.src=r.result};r.onerror=ko;r.readAsDataURL(file)})}
+function renderAv(){$("#avBtn").innerHTML=profile.photo?'<img alt="" src="'+profile.photo+'">':esc(author().charAt(0).toUpperCase())}
+
+/* profil */
+function fillProf(){
+ var P=viewA||profile;$("#pBanner").style.backgroundImage=P.banner?'url('+P.banner+')':"";
+ $("#pAv").innerHTML=dot({name:P.name||"Hes",photo:P.photo});
+ $("#pName").textContent=P.name||"Hes";if(!$("#profDlg").open)$("#pIn").value=author();
+ var tu=viewA?0:totalUse(),nv=viewA?viewA.count:mine.length;$("#sStar").textContent=stars(tu);$("#sVoix").textContent=fmt(nv);$("#sVues").textContent=fmt(tu);
+}
+function openProf(edit,aid){viewA=null;if(aid&&aid!==UID&&authors[aid])viewA=authors[aid];$("#profDlg").classList.toggle("ro",!edit||!!viewA);fillProf();if(!$("#profDlg").open)$("#profDlg").showModal()}
+$("#avBtn").onclick=function(){openProf(true)};
+$("#pPhBtn").onclick=function(){photoFor="prof";$("#ph").click()};
+$("#pBnBtn").onclick=function(){$("#bn").click()};
+$("#bn").onchange=async function(){var f=this.files[0];this.value="";if(!f)return;try{profile.banner=await shrinkTo(f,480,160);store("hes-profile",profile);fillProf()}catch(e){toast("Image illisible.")}};
+$("#pSave").onclick=function(){var nm=$("#pIn").value.trim().slice(0,24);if(welcome&&!nm){toast("Écris ton nom pour continuer.");return}profile.name=nm||"Hes";welcome=false;store("hes-welcome",1);try{document.cookie="hes_w=1;max-age=31536000;path=/;SameSite=Lax"}catch(e){}$("#pWel").hidden=true;$("#pSave").textContent="Enregistrer";store("hes-profile",profile);renderAll();$("#profDlg").close();syncShare()};
+$("#profDlg").addEventListener("click",function(e){if(e.target===this&&!welcome)this.close()});
+$("#profDlg").addEventListener("cancel",function(e){if(welcome)e.preventDefault()});
+
+/* favoris et explorer */
+function renderFavs(){
+ var list=LIB.concat(mine,remote).filter(function(v){return isFav(v.id)&&match(Q.voix,hay(v))});
+ $("#favs").innerHTML=list.length?list.map(function(v){return '<div class="fc"'+(v.photo?' style="background-image:url('+v.photo+')"':' data-i="'+esc(v.name.charAt(0).toUpperCase())+'"')+'><div class="fs"><b>'+esc(v.name)+'</b><small>'+esc(v.tag||(v.pub?'Publique':'Privée'))+'</small></div><button class="fp" data-demo="'+v.id+'" aria-label="Écouter">▶</button></div>'}).join(""):'<div class="empty" style="width:100%">Touche le cœur d’une voix pour la mettre ici.</div>';
+}
+function renderExplore(){
+ var list=LIB.map(function(v){return {v:v,off:1}}).concat(mine.filter(function(v){return v.pub}).map(function(v){return {v:v,by:author(),aid:UID||"me"}})).concat(remote.filter(function(v){return v.authorId!==UID}).map(function(v){return {v:v,by:v.author,aid:v.authorId}}));
+ list.sort(function(a,b){return (use[b.v.id]||0)-(use[a.v.id]||0)});
+ list=list.filter(function(o){return match(Q.explorer,hay(o.v))&&(!catSel||o.v.cat===catSel)});
+ $("#xlist").innerHTML=list.map(function(o){var v=o.v,n=use[v.id]||0;
+  return '<div class="xc"><div class="xa">'+dot(v)+'</div><b>'+esc(v.name)+'</b><small>'+esc([v.cat,v.tag].filter(Boolean).join(", ")||"Voix publiée")+'</small>'+descHtml(v)+'<div class="xp"><u id="pg-'+v.id+'"></u></div><div class="xr"><button class="ic" data-demo="'+v.id+'">▶ Écouter</button><button class="ic" data-use="'+v.id+'">Utiliser</button><button class="ic" data-fav="'+v.id+'">'+(isFav(v.id)?'♥':'♡')+'</button></div><div class="xm"><span>★ '+stars(n)+'</span><span>'+fmt(n)+' vues</span>'+(o.off?'<span>Voix Hes audio</span>':'<button class="lnk" data-author="'+esc(o.aid||"me")+'">'+esc(o.by||author())+'</button>')+'</div></div>'}).join("")||'<div class="empty">'+(Q.explorer||catSel?"Aucun résultat.":"Aucune voix publiée pour l’instant.")+'</div>';
+}
+function demo(id){
+ var v=get(id),bar=$("#pg-"+id);stopPlay();
+ function pgw(w){if(bar)bar.style.width=w}
+ if(samples[id]){var a=new Audio(samples[id]);a.ontimeupdate=function(){if(a.duration)pgw(a.currentTime/a.duration*100+"%")};a.onended=function(){pgw("0")};a.play();return}
+ if(!("speechSynthesis" in window)){toast("Ce navigateur ne sait pas lire à voix haute.");return}
+ var s="Bonjour, voici ma voix.",u=new SpeechSynthesisUtterance(s),fr=speechSynthesis.getVoices().filter(function(x){return /^fr/i.test(x.lang)})[0];
+ u.lang="fr-FR";if(fr)u.voice=fr;u.pitch=v.pitch;u.rate=v.rate*cfg.spd;
+ u.onboundary=function(e){pgw(Math.min(100,e.charIndex/s.length*100)+"%")};u.onend=function(){pgw("100%")};
+ speechSynthesis.speak(u);
+}
+
+/* deux versions de l’audio, avec des barres qui suivent les mots */
+var tick=null;
+function segsOf(text){
+ var cur=null,segs=[],off=0;
+ text.split(/(\[[^\]\n]+\])/).forEach(function(part){
+  var m=part.match(/^\[([^\]\n]+)\]$/);
+  if(m){var tk=TAGS[norm(m[1]).trim()];if(tk)cur=tk;return}
+  split(part).forEach(function(sn){var c=sn.trim();if(!c||!/[\p{L}\p{N}]/u.test(c))return;segs.push({t:c,k:cur||(force==="auto"?detect(sn):force),s:off});off+=c.length+1});
+ });
+ return segs;
+}
+function wfBars(S){var N=48,o=[];for(var i=0;i<N;i++){var c=S.charAt(Math.floor(i/N*S.length));o.push(c===" "||!c?16:34+(c.charCodeAt(0)*37%58))}return o}
+function renderTakes(){
+ $("#takes").innerHTML=takes.map(function(t,i){return '<div class="take"><button class="pl" data-take="'+i+'" aria-label="Écouter la version '+t.l+'">▶</button><div class="tw"><small>'+t.l+'</small><div class="wf">'+wfBars(t.S).map(function(x){return '<i style="height:'+x+'%"></i>'}).join("")+'</div></div><span class="du">'+fmtT(estDur(t))+'</span><button class="dl" data-dl="'+i+'" aria-label="Télécharger la version '+t.l+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg></button></div>'}).join("");
+}
+function stopPlay(){
+ clearInterval(tick);if("speechSynthesis" in window)speechSynthesis.cancel();
+ document.querySelectorAll(".take").forEach(function(c){c.classList.remove("on");c.querySelector(".pl").textContent="▶"});
+ document.querySelectorAll(".take i").forEach(function(x){x.classList.remove("on")});
+}
+function playTake(i){
+ var tk=takes[i],card=document.querySelectorAll(".take")[i];if(!tk||!card)return;
+ var was=card.classList.contains("on");stopPlay();if(was)return;
+ if(!("speechSynthesis" in window)){toast("Ce navigateur ne sait pas lire à voix haute.");return}
+ var v=get(tk.v),fr=speechSynthesis.getVoices().filter(function(x){return /^fr/i.test(x.lang)})[0];
+ var bars=card.querySelectorAll("i"),S=tk.S,pos=0,last=0,segEnd=0,rate=1,t0=Date.now();
+ card.classList.add("on");card.querySelector(".pl").textContent="❚❚";
+ function paint(){for(var b=0;b<bars.length;b++)bars[b].classList.toggle("on",b/bars.length*S.length<=pos)}
+ tk.segs.forEach(function(sg,idx){
+  var e=EMO[sg.k],u=new SpeechSynthesisUtterance(sg.t);u.lang="fr-FR";if(fr)u.voice=fr;
+  u.pitch=clamp(v.pitch*(1+(e.p-1)*tk.n),.1,2);u.rate=clamp(v.rate*cfg.spd*(1+(e.r-1)*tk.n),.5,1.8);u.volume=Math.min(1,e.v);
+  u.onstart=function(){pos=sg.s;segEnd=sg.s+sg.t.length;rate=u.rate;last=0;paint()};
+  u.onboundary=function(ev){pos=sg.s+ev.charIndex;last=Date.now();paint()};
+  u.onend=function(){pos=sg.s+sg.t.length;paint();if(idx===tk.segs.length-1){var du=card.querySelector(".du");if(du)du.textContent=fmtT((Date.now()-t0)/1000);setTimeout(stopPlay,250)}};
+  u.onerror=function(ev){if(ev.error==="canceled"||ev.error==="interrupted")return;toast("La voix n’a pas pu démarrer. Vérifie qu’une synthèse vocale est installée.");stopPlay()};
+  speechSynthesis.speak(u);
+ });
+ tick=setInterval(function(){if(Date.now()-last>400&&pos<segEnd){pos=Math.min(segEnd,pos+rate*13*.06);paint()}},60);
+}
+gen.onclick=function(){
+ var t=txt.value.trim();if(!t)return;
+ stopPlay();
+ var segs=segsOf(t);if(!segs.length){toast("Écris au moins une phrase.");return}
+ var S=segs.map(function(s){return s.t}).join(" "),used=[];
+ takes=[{l:"Naturel",n:1,v:sel,segs:segs,S:S},{l:"Expressif",n:1.7,v:sel,segs:segs,S:S}];
+ renderTakes();if(cfg.auto)setTimeout(function(){playTake(0)},150);
+ segs.forEach(function(s){var l=EMO[s.k].l;if(used.indexOf(l)<0)used.push(l)});
+ 
+ use[sel]=(use[sel]||0)+1;store("hes-use",use);
+ hist.unshift({v:sel,t:t});hist=hist.slice(0,30);store("hes-hist",hist);renderAll();
+};
+
+/* thème jour / nuit */
+function effTheme(){return document.documentElement.dataset.theme||(window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
+function setTheme(t,save){if(t)document.documentElement.dataset.theme=t;if(save)store("hes-theme",t);var e=effTheme(),tb=$("#thBtn");if(tb)tb.textContent=e==="dark"?"☾":"☀";document.querySelectorAll(".th button[data-th]").forEach(function(b){b.classList.toggle("on",b.dataset.th===e)})}
+setTheme(load("hes-theme",""),false);
+
+/* ---- recherche, catégories, paramètres ---- */
+var CATS=["Femme","Homme","Enfant","Narration","Humour","Animé","Jeux","Autre"],CATMAP={lea:"Femme",hugo:"Homme",nora:"Narration",max:"Homme"};
+LIB.forEach(function(v){v.cat=CATMAP[v.id]});
+var Q={explorer:"",voix:"",historique:""},catSel="",newCat="",rec=load("hes-rec",[]),srScope="explorer";
+var cfg=load("hes-cfg",{size:1,spd:1,auto:false});
+var SI='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
+function hay(v){return [v.name,v.tag||"",v.cat||"",v.desc||"",(v.tags||[]).join(" "),LIB.indexOf(v)>-1?"Hes audio":(v.author||author())].join(" ")}
+var STOP=["de","du","des","la","le","les","un","une","d","l","en","et","au","aux","voix","avec","pour","qui","a","ma","mon","sur"];
+var SYN=[["colere","enerve","furieux","rage","colerique"],["triste","pleure","melancolique","tristesse","emu"],["joyeux","joie","content","heureux","gai"],["douce","doux","calme","tendre","doucement"],["grave","profonde","basse"],["aigue","aigu","haute"],["drole","humour","rigolo","comique"],["peur","effraye","horreur","terrifiant"],["chuchote","murmure","souffle"]];
+function alts(w){var g=SYN.filter(function(gr){return gr.some(function(x){return x===w||(w.length>=4&&x.indexOf(w)===0)})})[0];return g||[w]}
+function near(a,b){if(Math.abs(a.length-b.length)>1)return false;var i=0,j=0,e=0;while(i<a.length&&j<b.length){if(a[i]===b[j]){i++;j++;continue}if(++e>1)return false;if(a.length>b.length)i++;else if(a.length<b.length)j++;else{i++;j++}}return e+(a.length-i)+(b.length-j)<=1}
+function match(q,s){
+ if(!q)return true;
+ var t=norm(s).replace(/#/g," "),words=t.split(/\s+/).filter(Boolean);
+ var toks=norm(q).replace(/#/g," ").split(/\s+/).filter(function(w){return w&&STOP.indexOf(w)<0});
+ if(!toks.length)return true;
+ return toks.every(function(w){return alts(w).some(function(a){return t.indexOf(a)>-1||(a.length>=5&&words.some(function(x){return near(a,x)}))})});
+}
+function descHtml(v){
+ var t=(v.desc||"").replace(/#[\p{L}\p{N}_]+/gu,"").replace(/\s+/g," ").trim();
+ return (t?'<p class="xd">'+esc(t)+'</p>':'')+((v.tags||[]).length?'<div class="xh">'+v.tags.map(function(x){return '<button class="ht" data-tag="'+esc(x)+'">#'+esc(x)+'</button>'}).join("")+'</div>':'');
+}
+function setDesc(v,txt){txt=(txt||"").trim().slice(0,200);v.desc=txt;var seen={};v.tags=(txt.match(/#[\p{L}\p{N}_]+/gu)||[]).map(function(x){return x.slice(1).toLowerCase()}).filter(function(x){return seen[x]?false:(seen[x]=1)}).slice(0,8)}
+function scope(){var v=document.body.dataset.view||"accueil";return v==="accueil"?"explorer":v}
+
+function applyCfg(){
+ ["main","header"].forEach(function(s){var el=document.querySelector(s);if(el)el.style.zoom=cfg.size});
+ function mark(a,val){document.querySelectorAll("[data-"+a+"]").forEach(function(b){if(b.tagName==="BUTTON"&&b.closest(".th"))b.classList.toggle("on",b.dataset[a]===val)})}
+ mark("sz",String(cfg.size));mark("sp",String(cfg.spd));mark("au",cfg.auto?"1":"0");
+}
+function saveCfg(){store("hes-cfg",cfg);applyCfg()}
+function clearData(k,b){
+ if(b.dataset.arm!=="1"){b.dataset.arm="1";b.dataset.t=b.textContent;b.textContent="Confirmer ?";setTimeout(function(){b.dataset.arm="";b.textContent=b.dataset.t},3000);return}
+ b.dataset.arm="";b.textContent=b.dataset.t;
+ if(k==="hist"||k==="all"){hist=[];store("hes-hist",hist)}
+ if(k==="rec"||k==="all"){rec=[];store("hes-rec",rec)}
+ if(k==="all"){try{localStorage.clear()}catch(e){}mine=[];favs=[];use={};samples={};sel="lea";profile={name:"Hes",photo:"",banner:""};cfg={size:1,spd:1,auto:false};Q={explorer:"",voix:"",historique:""};catSel="";delete document.documentElement.dataset.theme;setTheme("",false);applyCfg()}
+ renderAll();toast("C’est fait.");
+}
+
+function renderVcats(){$("#vcats").innerHTML=CATS.map(function(c){return '<button class="chip'+(c===newCat?' on':'')+'" data-vc="'+c+'">'+c+'</button>'}).join("")}
+function updSearchUI(){
+ var s=scope(),q=Q[s]||"",view=document.body.dataset.view||"accueil";
+ var xn=$("#xnote");if(xn)xn.textContent=DB?"Voix publiées par tout le monde, en direct.":"Hors ligne : tu vois seulement les voix de cet appareil.";
+ var ph={explorer:"Rechercher une voix…",voix:"Rechercher dans mes voix…",historique:"Rechercher dans l’historique…"}[s];
+ $("#sbTxt").textContent=q||ph;$("#sbTxt").classList.toggle("has",!!q);$("#sbx").hidden=!q;
+ $("#cats").innerHTML=[""].concat(CATS).map(function(c){return '<button class="chip'+(c===catSel?' on':'')+'" data-cat="'+c+'">'+(c||"Toutes")+'</button>'}).join("");
+ var n=s==="explorer"?$("#xlist").querySelectorAll(".xc").length:s==="voix"?$("#mine").querySelectorAll(".row").length:$("#hist").querySelectorAll(".row").length;
+ var info=$("#sbinfo"),on=view!=="accueil"&&(q||(s==="explorer"&&catSel));
+ info.hidden=!on;if(on)info.textContent=n+(n>1?" résultats":" résultat")+(q?" pour « "+q+" »":"")+(s==="explorer"&&catSel?" dans "+catSel:"");
+}
+
+function cands(s){
+ var out=[];function add(x){x=(x||"").trim();if(x&&out.indexOf(x)<0)out.push(x)}
+ if(s==="historique"){hist.forEach(function(x){add(x.t.split(/\s+/).slice(0,4).join(" "));add(get(x.v).name)})}
+ else{
+  (s==="voix"?mine:LIB.concat(mine.filter(function(v){return v.pub}),remote)).forEach(function(v){add(v.name);add(v.tag);add(v.cat);add(LIB.indexOf(v)>-1?"Hes audio":(v.author||author()));(v.tags||[]).forEach(function(x){add("#"+x)});if(v.desc)add(v.desc.replace(/#[\p{L}\p{N}_]+/gu,"").trim().split(/\s+/).slice(0,4).join(" "))});
+  if(s==="explorer")CATS.forEach(add);
+ }
+ return out;
+}
+function suggest(s,q){
+ var nq=norm(q.trim()),out=[];if(!nq)return out;
+ cands(s).forEach(function(x){var n=norm(x),i=n.indexOf(nq),r=i===0?0:n.indexOf(" "+nq)>-1?1:i>-1?2:-1;if(r<0)return;if(r===1)i=n.indexOf(" "+nq)+1;out.push({t:x,i:i,r:r})});
+ out.sort(function(a,b){return a.r-b.r||a.t.length-b.t.length});
+ return out.slice(0,9);
+}
+function rowHtml(ic,label,val,av){return '<div class="sr-row" data-sq="'+esc(val)+'"><span class="sr-ic">'+ic+'</span><span class="sr-t">'+label+'</span>'+(av?'<span class="sr-av">'+av+'</span>':'')+'<button class="sr-fill" data-sf="'+esc(val)+'" aria-label="Utiliser ce texte">↖</button></div>'}
+function drawList(){
+ var q=$("#srIn").value.trim(),html="";$("#srClr").hidden=!q;
+ if(!q){
+  html=rec.map(function(t){return rowHtml("↺",esc(t),t,"")}).join("");
+  if(srScope==="explorer")html+='<div class="srt">Catégories</div><div class="chips wrap">'+CATS.map(function(c){return '<button class="chip" data-cat="'+c+'">'+c+'</button>'}).join("")+'</div>';
+  if(!html)html='<div class="empty">Écris le nom d’une voix, un auteur ou une catégorie.</div>';
+ }else{
+  html=suggest(srScope,q).map(function(s){
+   var v=LIB.concat(mine).filter(function(x){return x.name===s.t})[0];
+   return rowHtml(SI,esc(s.t.slice(0,s.i))+'<em>'+esc(s.t.slice(s.i,s.i+q.length))+'</em>'+esc(s.t.slice(s.i+q.length)),s.t,v?dot(v):"");
+  }).join("");
+  if(!html)html=rowHtml(SI,esc(q),q,"");
+ }
+ $("#srList").innerHTML=html;
+}
+function openSearch(){srScope=scope();$("#sr").hidden=false;$("#srIn").value=Q[srScope]||"";drawList();setTimeout(function(){$("#srIn").focus()},30)}
+function closeSearch(){$("#sr").hidden=true}
+function goSearch(text){
+ var q=(text!==undefined?text:$("#srIn").value).trim();Q[srScope]=q;
+ if(q){rec=[q].concat(rec.filter(function(x){return x!==q})).slice(0,8);store("hes-rec",rec)}
+ closeSearch();
+ if(document.body.dataset.view==="accueil")location.hash="explorer";
+ renderAll();
+}
+$("#sbar").onclick=openSearch;
+$("#sbx").onclick=function(){Q[scope()]="";renderAll()};
+$("#srBack").onclick=closeSearch;
+$("#srGo").onclick=function(){goSearch()};
+$("#srClr").onclick=function(){$("#srIn").value="";drawList();$("#srIn").focus()};
+$("#srIn").oninput=drawList;
+$("#srIn").onkeydown=function(e){if(e.key==="Enter"){e.preventDefault();goSearch()}};
+$("#srList").onclick=function(e){
+ var f=e.target.closest("[data-sf]");if(f){$("#srIn").value=f.dataset.sf+" ";drawList();$("#srIn").focus();return}
+ var r=e.target.closest("[data-sq]");if(r)goSearch(r.dataset.sq);
+};
+$("#pkq").oninput=renderList;
+var welcome=!(load("hes-welcome",0)||(profile.name&&profile.name!=="Hes")||/(^|; )hes_w=1/.test(document.cookie||""));
+$("#thBtn").onclick=function(){setTheme(effTheme()==="dark"?"light":"dark",true)};
+$("#closeDr").onclick=function(){drawer(false)};
+function fmtT(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+":"+("0"+s%60).slice(-2)}
+function estDur(tk){var v=get(tk.v),t=0;tk.segs.forEach(function(sg){var e=EMO[sg.k],r=clamp(v.rate*cfg.spd*(1+(e.r-1)*tk.n),.5,1.8);t+=sg.t.length/(13*r)+.25});return t}
+
+/* partage en ligne : tout le monde voit les voix publiées */
+function okImg(s){return typeof s==="string"&&/^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(s)?s:""}
+function shareState(){return DB?(UID&&CANW!==false?"on":"ro"):"off"}
+function shareMsg(){return shareState()==="on"?"Voix publiée pour tout le monde.":"Voix publiée sur cet appareil."}
+function pubNoteUpd(){var s=shareState();$("#pubNote").textContent=s==="on"?"Ta voix sera visible par toutes les personnes qui ouvrent le site.":s==="ro"?"Ton compte peut voir les voix publiées, mais pas en publier. La voix reste sur cet appareil.":"Le partage en ligne n’est pas connecté (Paramètres, Connexion en ligne). La voix reste sur cet appareil."}
+var syncing=false,again=false;
+function syncShare(){
+ if(FBON){fbSync();return}
+ if(!DB||!UID||CANW===false)return;
+ var pubs=mine.filter(function(v){return v.pub});
+ if(!pubs.length&&!load("hes-shared",0))return;
+ if(syncing){again=true;return}
+ var ref;try{ref=DB.doc("voices/"+UID)}catch(e){return}
+ syncing=true;
+ var body=pubs.length?{name:author(),photo:okImg(profile.photo),banner:okImg(profile.banner),voices:pubs.slice(0,20).map(function(v){return {id:v.id,name:v.name,cat:v.cat||"Autre",desc:v.desc||"",tags:v.tags||[],pitch:v.pitch||1,rate:v.rate||1,photo:okImg(v.photo)}}),updatedAt:Date.now()}:null;
+ (body?ref.set(body):ref.delete()).then(function(){store("hes-shared",body?1:0)},function(e){
+  var c=e&&e.code;
+  if(c==="invalid_argument"){CANW=false;toast("Ton compte peut voir les voix publiées mais pas en publier.")}
+  else if(c==="quota_exceeded")toast("La base des voix est pleine.");
+  else toast("Publication en ligne impossible pour l’instant.");
+ }).then(function(){syncing=false;if(again){again=false;syncShare()}});
+}
+/*FB-START*/
+var FBON=false,fbTok=null,fbUid=null,fbExp=0;
+function fbCfg(){var c=window.HES_FIREBASE||{},l=load("hes-fb",{}),k=String(c.apiKey||l.apiKey||"").trim(),u=String(c.databaseURL||l.databaseURL||"").trim().replace(/\/+$/,"");return k&&/^https:\/\//.test(u)?{apiKey:k,databaseURL:u}:null}
+async function fbAuth(c){
+ var s=load("hes-fbauth",null),r,j;
+ if(s&&s.refresh){
+  try{r=await fetch("https://securetoken.googleapis.com/v1/token?key="+encodeURIComponent(c.apiKey),{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"grant_type=refresh_token&refresh_token="+encodeURIComponent(s.refresh)});j=await r.json();
+   if(j.id_token){fbTok=j.id_token;fbUid=j.user_id;fbExp=Date.now()+(+j.expires_in-60)*1000;store("hes-fbauth",{refresh:j.refresh_token,uid:j.user_id});return true}}catch(e){}
+ }
+ r=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key="+encodeURIComponent(c.apiKey),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({returnSecureToken:true})});
+ j=await r.json();if(!j.idToken)throw new Error(j.error&&j.error.message||"connexion refusée");
+ fbTok=j.idToken;fbUid=j.localId;fbExp=Date.now()+(+j.expiresIn-60)*1000;store("hes-fbauth",{refresh:j.refreshToken,uid:j.localId});return true;
+}
+async function fbToken(c){if(!fbTok||Date.now()>fbExp)await fbAuth(c);return fbTok}
+function applyDocs(list){
+ remote=[];authors={};
+ list.forEach(function(d){
+  var x=d.data||{},vs=x.voices?Object.keys(x.voices).map(function(k){return x.voices[k]}):[];
+  authors[d.id]={name:String(x.name||"Anonyme").slice(0,24),photo:okImg(x.photo),banner:okImg(x.banner),count:vs.length};
+  vs.forEach(function(v){if(v&&v.id&&v.name)remote.push({id:d.id+"_"+v.id,name:String(v.name).slice(0,30),cat:String(v.cat||"Autre").slice(0,20),desc:String(v.desc||"").slice(0,200),tags:Array.isArray(v.tags)?v.tags.slice(0,8).map(function(x){return String(x).slice(0,30)}):[],pitch:clamp(+v.pitch||1,.1,2),rate:clamp(+v.rate||1,.5,1.8),photo:okImg(v.photo),author:authors[d.id].name,authorId:d.id,pub:true,remote:true})});
+ });
+ renderAll();
+}
+async function fbPull(){
+ var c=fbCfg();if(!c)return;
+ try{var tok=await fbToken(c),r=await fetch(c.databaseURL+"/voices.json?auth="+encodeURIComponent(tok));if(!r.ok)throw new Error("lecture");var j=await r.json()||{};applyDocs(Object.keys(j).map(function(k){return {id:k,data:j[k]}}))}
+ catch(e){if(!fbPull.warned){fbPull.warned=1;toast("Impossible de lire les voix publiées en ligne.")}}
+}
+async function fbSync(){
+ var c=fbCfg();if(!c||!fbUid)return;
+ var pubs=mine.filter(function(v){return v.pub});
+ if(!pubs.length&&!load("hes-shared",0))return;
+ if(syncing){again=true;return}
+ syncing=true;
+ try{
+  var tok=await fbToken(c),url=c.databaseURL+"/voices/"+encodeURIComponent(fbUid)+".json?auth="+encodeURIComponent(tok),vs={};
+  pubs.slice(0,20).forEach(function(v){vs[v.id]={id:v.id,name:v.name,cat:v.cat||"Autre",desc:v.desc||"",tags:v.tags||[],pitch:v.pitch||1,rate:v.rate||1,photo:okImg(v.photo)}});
+  var r=pubs.length?await fetch(url,{method:"PUT",body:JSON.stringify({name:author(),photo:okImg(profile.photo),banner:okImg(profile.banner),voices:vs,updatedAt:Date.now()})}):await fetch(url,{method:"DELETE"});
+  if(r.ok){store("hes-shared",pubs.length?1:0);fbPull()}
+  else if(r.status===401||r.status===403){CANW=false;toast("Les règles de la base refusent l’écriture. Vérifie les règles Firebase.")}
+  else toast("Publication en ligne impossible pour l’instant.");
+ }catch(e){toast("Publication en ligne impossible pour l’instant.")}
+ syncing=false;if(again){again=false;fbSync()}
+}
+async function startFirebase(){
+ var c=fbCfg();if(!c)return false;
+ try{await fbAuth(c)}catch(e){if(!(e instanceof TypeError))toast("Firebase : "+(e.message||"connexion refusée")+". Active la connexion anonyme dans Authentication.");return false}
+ FBON=true;DB={fb:true};UID=fbUid;CANW=true;
+ await fbPull();
+ if(!startFirebase.t)startFirebase.t=setInterval(function(){if(!document.hidden)fbPull()},20000);
+ syncShare();renderAll();
+ return true;
+}
+/*FB-END*/
+function updFb(){var s=$("#fbStat");if(s)s.textContent=FBON?"Connecté. Tout le monde voit les voix publiées.":(fbCfg()?"Valeurs enregistrées, connexion impossible pour l’instant.":"Pas encore connecté.")}
+async function loadEnvCfg(){
+ try{var r=await fetch("/api/firebase-config",{cache:"no-store"});if(!r.ok)return;var j=await r.json();if(j&&j.apiKey&&j.databaseURL)window.HES_FIREBASE={apiKey:j.apiKey,databaseURL:j.databaseURL}}catch(e){}
+}
+function startShare(){(fbCfg()?Promise.resolve():loadEnvCfg()).then(function(){return startFirebase()}).then(function(ok){if(!ok)startArtifactShare()},function(){startArtifactShare()})}
+function startArtifactShare(){
+ if(!(window.claude&&window.claude.use))return;
+ Promise.all([claude.use("db"),claude.use("user")]).then(function(r){
+  DB=r[0];var U=r[1];if(!DB){renderAll();return}
+  if(U){
+   Promise.resolve(U.id()).then(function(id){UID=id||null;syncShare();renderAll()});
+   Promise.resolve(U.can("data.write")).then(function(c){CANW=c});
+  }
+  var t=setTimeout(function(){toast("Les voix publiées ne répondent pas pour l’instant.")},10000);
+  DB.collection("voices").onSnapshot(function(snap){
+   clearTimeout(t);remote=[];authors={};
+   snap.docs.forEach(function(d){
+    var x=d.data()||{},vs=Array.isArray(x.voices)?x.voices:[];
+    authors[d.id]={name:String(x.name||"Anonyme").slice(0,24),photo:okImg(x.photo),banner:okImg(x.banner),count:vs.length};
+    vs.forEach(function(v){if(v&&v.id&&v.name)remote.push({id:d.id+"_"+v.id,name:String(v.name).slice(0,30),cat:String(v.cat||"Autre").slice(0,20),desc:String(v.desc||"").slice(0,200),tags:Array.isArray(v.tags)?v.tags.slice(0,8).map(function(x){return String(x).slice(0,30)}):[],pitch:clamp(+v.pitch||1,.1,2),rate:clamp(+v.rate||1,.5,1.8),photo:okImg(v.photo),author:authors[d.id].name,authorId:d.id,pub:true,remote:true})});
+   });
+   renderAll();
+  },function(e){clearTimeout(t);if(!e||e.code!=="revoked")toast("Impossible de lire les voix publiées.")});
+ },function(){});
+}
+function downloadTake(i){
+ var tk=takes[i];if(!tk)return;
+ if(tk.url){var a=document.createElement("a");a.href=tk.url;a.download="hes-audio-"+tk.l.toLowerCase()+".wav";document.body.appendChild(a);a.click();a.remove();return}
+ toast("Pas encore possible : la voix du téléphone ne peut pas être enregistrée. Le téléchargement marchera avec le serveur de voix.");
+}
+$("#myProf").onclick=function(){drawer(false);openProf(true)};
+applyCfg();
+
+renderAll();route();
+if(welcome){openProf(true);$("#pWel").hidden=false;$("#pSave").textContent="Commencer";$("#pIn").value=""}
+startShare();
+$("#fbKey").value=load("hes-fb",{}).apiKey||"";$("#fbUrl").value=load("hes-fb",{}).databaseURL||"";
+$("#fbGo").onclick=function(){
+ store("hes-fb",{apiKey:$("#fbKey").value.trim(),databaseURL:$("#fbUrl").value.trim()});
+ FBON=false;fbTok=null;
+ if(!fbCfg()){toast("Colle la clé et l’adresse de la base.");return}
+ startFirebase().then(function(ok){toast(ok?"Connecté.":"Connexion impossible. Vérifie les deux valeurs.");updFb()});
+};
+
+/* ---- vidéo avec sous-titres : voix par personne + émotions ---- */
+function copyText(s){try{navigator.clipboard.writeText(s).then(function(){toast("Copié : "+s)},function(){toast(s)})}catch(e){toast(s)}}
+var vd={cues:[],sp:[],file:null,url:"",spoken:{},timer:null};
+function parseSubs(txt){
+ var cues=[];
+ function t(h,m,s,ms){return (+h||0)*3600+(+m)*60+(+s)+parseFloat("0."+ms)}
+ txt.replace(/\r/g,"").replace(/^\uFEFF/,"").split(/\n{2,}/).forEach(function(b){
+  var L=b.split("\n").filter(function(x){return x.trim()}),i=L.findIndex(function(l){return /-->/.test(l)});if(i<0)return;
+  var m=L[i].match(/(?:(\d+):)?(\d+):(\d+)[,.](\d+)\s*-->\s*(?:(\d+):)?(\d+):(\d+)[,.](\d+)/);if(!m)return;
+  cues.push({s:t(m[1],m[2],m[3],m[4]),e:t(m[5],m[6],m[7],m[8]),text:L.slice(i+1).join("\n").replace(/<[^>]+>/g,"").replace(/\{[^}]*\}/g,"")});
+ });
+ return cues.filter(function(c){return c.text.trim()&&c.e>c.s});
+}
+function trackCues(){
+ var v=$("#vid"),out=[];
+ for(var i=0;i<v.textTracks.length;i++){var tr=v.textTracks[i];if(tr.kind==="subtitles"||tr.kind==="captions"){tr.mode="hidden";var cs=tr.cues;if(cs)for(var j=0;j<cs.length;j++)out.push({s:cs[j].startTime,e:cs[j].endTime,text:String(cs[j].text||"").replace(/<[^>]+>/g,"")})}}
+ return out;
+}
+async function energy(file,cues){
+ if(file.size>80e6)return null;
+ try{
+  var AC=window.AudioContext||window.webkitAudioContext,ctx=new AC(),buf=await ctx.decodeAudioData(await file.arrayBuffer());ctx.close&&ctx.close();
+  var d=buf.getChannelData(0),sr=buf.sampleRate;
+  var r=cues.map(function(c){var a=Math.floor(c.s*sr),b=Math.min(d.length,Math.floor(c.e*sr)),s=0,n=0;for(var i=a;i<b;i+=4){s+=d[i]*d[i];n++}return n?Math.sqrt(s/n):0});
+  var sorted=r.filter(function(x){return x>0}).sort(function(a,b){return a-b}),med=sorted[Math.floor(sorted.length/2)];
+  return med?r.map(function(x){return x/med}):null;
+ }catch(e){return null}
+}
+function analyseCues(cues,en){
+ var sp=[],cur=-1;
+ function spIdx(name){var i=-1;sp.forEach(function(x,k){if(x.name===name)i=k});if(i<0){sp.push({name:name,voice:LIB[sp.length%LIB.length].id});i=sp.length-1}return i}
+ function def(k){return spIdx("Personne "+(k+1))}
+ cues.forEach(function(c,ci){
+  var parts=[],cueTag=null;
+  c.text.split("\n").forEach(function(line){
+   var dash=/^\s*[-–—]\s*/.test(line),tag=null;line=line.replace(/^\s*[-–—]\s*/,"");
+   line=line.replace(/[\[(]([^\])]{1,25})[\])]/g,function(m0,g){var k=TAGS[norm(g).trim()];if(k){tag=k;return " "}return m0});
+   var nm=line.match(/^\s*([A-ZÀ-Ý][A-ZÀ-Ý' ]{1,17}|[A-ZÀ-Ý][a-zà-ÿ']{1,11})\s*:\s*(.+)$/u);
+   if(nm){cur=spIdx(nm[1].trim());line=nm[2]}
+   else if(dash){cur=cur<0?def(0):(cur===def(0)?def(1):def(0))}
+   else if(cur<0){cur=def(0)}
+   line=line.replace(/\s+/g," ").trim();
+   if(!/[\p{L}\p{N}]/u.test(line)){if(tag)cueTag=tag;return}
+   parts.push({sp:cur,t:line,k:tag||cueTag||detect(line)});
+  });
+  if(en)parts.forEach(function(p){if(p.k==="calme"){if(en[ci]>1.7)p.k="crie";else if(en[ci]<.45)p.k="chuchote"}});
+  c.parts=parts;
+ });
+ vd.sp=sp;
+}
+function renderVideo(){
+ $("#vres").hidden=false;
+ var opts=LIB.concat(mine,remote);
+ $("#vsp").innerHTML=vd.sp.map(function(s,i){
+  var n=0;vd.cues.forEach(function(c){c.parts.forEach(function(p){if(p.sp===i)n++})});
+  return '<div class="set"><div><b>'+esc(s.name)+'</b><small>'+n+(n>1?' phrases':' phrase')+'</small></div><select class="sel" data-spv="'+i+'">'+opts.map(function(v){return '<option value="'+esc(v.id)+'"'+(v.id===s.voice?' selected':'')+'>'+esc(v.name)+'</option>'}).join("")+'</select></div>';
+ }).join("")||'<div class="empty">Aucune personne détectée.</div>';
+ $("#vcues").innerHTML=vd.cues.slice(0,80).map(function(c){return c.parts.map(function(p){return '<div class="vc"><small>'+fmtT(c.s)+'</small><b>'+esc(vd.sp[p.sp].name)+'</b><i>'+EMO[p.k].l+'</i><div>'+esc(p.t)+'</div></div>'}).join("")}).join("");
+}
+function sayCue(c){
+ if(!("speechSynthesis" in window))return;
+ speechSynthesis.cancel();
+ var fr=speechSynthesis.getVoices().filter(function(x){return /^fr/i.test(x.lang)})[0],chars=c.parts.reduce(function(a,p){return a+p.t.length},0),target=Math.max(.8,(c.e-c.s)*.95);
+ c.parts.forEach(function(p){
+  var v=get(vd.sp[p.sp].voice),e=EMO[p.k],r0=v.rate*e.r*cfg.spd,need=chars/(13*r0)/target,u=new SpeechSynthesisUtterance(p.t);
+  u.lang="fr-FR";if(fr)u.voice=fr;u.pitch=clamp(v.pitch*e.p,.1,2);u.rate=clamp(r0*clamp(need,.9,1.8),.5,2);u.volume=Math.min(1,e.v);
+  speechSynthesis.speak(u);
+ });
+}
+function vStop(){clearInterval(vd.timer);vd.timer=null}
+function vSeek(){if("speechSynthesis" in window)speechSynthesis.cancel();var t=$("#vid").currentTime;vd.spoken={};vd.cues.forEach(function(c,i){if(c.e<=t)vd.spoken[i]=1})}
+function vStart(){vStop();vd.timer=setInterval(function(){var t=$("#vid").currentTime;vd.cues.forEach(function(c,i){if(!vd.spoken[i]&&t>=c.s&&t<c.e-.15){vd.spoken[i]=1;sayCue(c)}})},120)}
+$("#vid").onplay=function(){vSeek();vStart()};
+$("#vid").onpause=$("#vid").onended=function(){vStop();if("speechSynthesis" in window)speechSynthesis.cancel()};
+$("#vid").onseeked=vSeek;
+$("#vkeep").onchange=function(){$("#vid").muted=!this.checked};
+$("#vfile").onchange=function(){
+ var f=this.files[0];if(!f)return;vd.file=f;if(vd.url)URL.revokeObjectURL(vd.url);vd.url=URL.createObjectURL(f);
+ var v=$("#vid");v.src=vd.url;v.muted=!$("#vkeep").checked;$("#vres").hidden=false;
+ $("#vstat").textContent="Vidéo prête. Ajoute les sous-titres, puis touche Analyser.";
+};
+$("#vsub").onchange=async function(){var f=this.files[0];if(!f)return;try{$("#vtxt").value=await f.text();$("#vstat").textContent="Sous-titres chargés : "+f.name}catch(e){$("#vstat").textContent="Fichier de sous-titres illisible."}};
+$("#vgo").onclick=async function(){
+ if(!vd.file){$("#vstat").textContent="Choisis d’abord la vidéo.";return}
+ var cues=parseSubs($("#vtxt").value);
+ if(!cues.length)cues=trackCues();
+ if(!cues.length){$("#vstat").textContent="Aucun sous-titre trouvé. Ceux écrits sur l’image ne peuvent pas être lus ici : ajoute un fichier .srt ou .vtt, ou colle-les.";return}
+ $("#vstat").textContent="Analyse du son et des émotions…";
+ var en=await energy(vd.file,cues);
+ vd.cues=cues;analyseCues(cues,en);vd.spoken={};renderVideo();
+ $("#vstat").textContent=cues.length+" sous-titres, "+vd.sp.length+(vd.sp.length>1?" personnes":" personne")+(en?". Le volume du son d’origine a servi à régler les émotions.":".")+" Lance la vidéo pour entendre les voix.";
+};
+document.addEventListener("change",function(e){var t=e.target;if(t.dataset&&t.dataset.spv!==undefined&&vd.sp[+t.dataset.spv])vd.sp[+t.dataset.spv].voice=t.value});
+})();
+</script>
+</body>
+</html>
