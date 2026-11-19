@@ -195,6 +195,15 @@ aside a.pill{display:block;text-align:center;margin:22px 4px 8px;padding:14px;bo
 .du{flex:none;font-size:12px;color:var(--mute);min-width:36px;text-align:right}
 a.ic{text-decoration:none;display:inline-block}
 .tst{margin:0 0 8px;font-size:12px;color:var(--mute)}
+.gl{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px 12px;margin-bottom:10px}
+.gl[hidden]{display:none}
+.ring{--p:0;width:52px;height:52px;border-radius:50%;background:conic-gradient(var(--btn) calc(var(--p) * 1%),var(--line) 0);display:grid;place-items:center;flex:none}
+.ring .dot{width:42px;height:42px;font-size:16px;border:3px solid var(--card)}
+.glx b{display:block;font-size:14px;font-weight:600}
+.glx small{color:var(--mute);font-size:13px}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:rot .8s linear infinite;margin-right:8px;vertical-align:-3px}
+@keyframes rot{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:2s}}
 .sel{max-width:46%;border:1px solid var(--line);border-radius:12px;padding:8px;font:inherit;font-size:14px;background:var(--bg);color:var(--ink)}
 .vcues{max-height:260px;overflow:auto}
 .vc{padding:8px 0;border-top:1px solid var(--line);font-size:14px}
@@ -339,7 +348,7 @@ a.ic{text-decoration:none;display:inline-block}
     <h2>Lecture</h2>
     <div class="panel">
       <div class="set col"><div><b>Vitesse de la voix</b><small>Pour toutes les voix</small></div><div class="th"><button data-sp="0.85">Lent</button><button data-sp="1">Normal</button><button data-sp="1.2">Rapide</button></div></div>
-      <div class="set col"><div><b>Moteur de voix</b><small>Intégré : marche sur tous les navigateurs et permet le téléchargement (le modèle se télécharge la première fois)</small></div><div class="th"><button data-eng="0">Auto</button><button data-eng="1">Intégré</button></div></div>
+      <div class="set col"><div><b>Moteur de voix</b><small>Auto : voix du serveur, puis la voix intégrée s’il ne répond pas. Intégré : modèle dans le navigateur. Téléphone : voix du navigateur.</small></div><div class="th"><button data-eng="0">Auto</button><button data-eng="1">Intégré</button><button data-eng="2">Téléphone</button></div></div>
       <div class="set"><div><b>Lecture automatique</b><small>Joue la 1re version après Générer</small></div><div class="th"><button data-au="0">Non</button><button data-au="1">Oui</button></div></div>
     </div>
     <h2>Connexion en ligne</h2>
@@ -373,7 +382,7 @@ a.ic{text-decoration:none;display:inline-block}
   </section>
 </main>
 
-<div class="dock" id="dock"><div class="dockin"><p class="tst" id="tstat" hidden></p><div class="takes" id="takes"></div><div class="bar"><button class="btn" id="gen">Générer</button></div><div class="chips" id="chips"></div></div></div>
+<div class="dock" id="dock"><div class="dockin"><p class="tst" id="tstat" hidden></p><div class="gl" id="gl" hidden><div class="ring" id="glring"><span id="glav"></span></div><div class="glx"><b id="glt">Création de l’audio…</b><small id="glp">0 %</small></div></div><div class="takes" id="takes"></div><div class="bar"><button class="btn" id="gen">Générer</button></div><div class="chips" id="chips"></div></div></div>
 
 <input type="file" id="ph" accept="image/*" hidden>
 
@@ -725,7 +734,7 @@ function segsOf(text){
 }
 function wfBars(S){var N=48,o=[];for(var i=0;i<N;i++){var c=S.charAt(Math.floor(i/N*S.length));o.push(c===" "||!c?16:34+(c.charCodeAt(0)*37%58))}return o}
 function renderTakes(){
- $("#takes").innerHTML=takes.map(function(t,i){return '<div class="take"><button class="pl" data-take="'+i+'" aria-label="Écouter la version '+t.l+'">▶</button><div class="tw"><small>'+t.l+'</small><div class="wf">'+wfBars(t.S).map(function(x){return '<i style="height:'+x+'%"></i>'}).join("")+'</div></div><span class="du">'+fmtT(estDur(t))+'</span><button class="dl" data-dl="'+i+'" aria-label="Télécharger la version '+t.l+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg></button></div>'}).join("");
+ $("#takes").innerHTML=takes.map(function(t,i){return '<div class="take"><button class="pl" data-take="'+i+'" aria-label="Écouter la version '+t.l+'">▶</button><div class="tw"><small>'+t.l+'</small><div class="wf">'+wfBars(t.S).map(function(x){return '<i style="height:'+x+'%"></i>'}).join("")+'</div></div><span class="du">'+fmtT(t.dur||estDur(t))+'</span><button class="dl" data-dl="'+i+'" aria-label="Télécharger la version '+t.l+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg></button></div>'}).join("");
 }
 function stopPlay(){
  clearInterval(tick);if(aud){aud.pause();aud.ontimeupdate=null}if("speechSynthesis" in window)speechSynthesis.cancel();
@@ -760,8 +769,7 @@ gen.onclick=function(){
  var S=segs.map(function(s){return s.t}).join(" "),used=[];
  takes.forEach(function(t){if(t.url)URL.revokeObjectURL(t.url)});
  takes=[{l:"Naturel",n:1,v:sel,segs:segs,S:S},{l:"Expressif",n:1.7,v:sel,segs:segs,S:S}];
- renderTakes();
- if(useEng()){takes.forEach(function(t){t.pending=true});engineTakes(segs,sel)}else if(cfg.auto)setTimeout(function(){playTake(0)},150);
+ if(useEng()){takes.forEach(function(t){t.pending=true});$("#takes").innerHTML="";startGen(segs,sel)}else{renderTakes();if(cfg.auto)setTimeout(function(){playTake(0)},150)}
  segs.forEach(function(s){var l=EMO[s.k].l;if(used.indexOf(l)<0)used.push(l)});
  
  use[sel]=(use[sel]||0)+1;store("hes-use",use);
@@ -995,6 +1003,7 @@ applyCfg();
 renderAll();route();
 if(welcome){openProf(true);$("#pWel").hidden=false;$("#pSave").textContent="Commencer";$("#pIn").value=""}
 startShare();
+probeApi();
 $("#fbKey").value=load("hes-fb",{}).apiKey||"";$("#fbUrl").value=load("hes-fb",{}).databaseURL||"";
 $("#fbGo").onclick=function(){
  store("hes-fb",{apiKey:$("#fbKey").value.trim(),databaseURL:$("#fbUrl").value.trim()});
@@ -1009,8 +1018,8 @@ function copyText(s){try{navigator.clipboard.writeText(s).then(function(){toast(
 /* ---- voix intégrée : un modèle de voix qui tourne dans le navigateur (marche partout, audio téléchargeable) ---- */
 /*ENG-START*/
 var TTSM={state:"off",pipe:null,p:null,cache:{}},aud=new Audio(),vctx=null,vsrc=null;
-function useEng(){return cfg.eng==="1"||!("speechSynthesis" in window)||(speechSynthesis.getVoices().length===0&&$("#warn").style.display==="block")}
-function tstat(m){var e=$("#tstat");if(!e)return;e.hidden=!m;e.textContent=m||""}
+function useEng(){return cfg.eng!=="2"&&(cfg.eng==="1"||apiUp()||!("speechSynthesis" in window)||(speechSynthesis.getVoices().length===0&&$("#warn").style.display==="block"))}
+function tstat(m){var e=$("#tstat");if(!e)return;e.hidden=!m;e.textContent=m||"";if(m&&!$("#gl").hidden)$("#glt").textContent=m}
 function ttsLoad(){
  if(TTSM.state==="ready")return Promise.resolve(true);
  if(TTSM.p)return TTSM.p;
@@ -1042,23 +1051,59 @@ function stretch(a,r,sr){
  for(i=0;i<n;i++)o[i]=nm[i]>1e-3?o[i]/nm[i]:0;
  return o.subarray(0,n);
 }
+/* Voix par serveur (via /api/tts sur Vercel : la clé reste sur le serveur) */
+var VAPI={ok:null,downUntil:0,warnUntil:0,cache:{}},apiCtx=null;
+var FTAG={triste:"[sad]",colere:"[angry]",joie:"[excited]",peur:"[scared]",crie:"[shouting]",chuchote:"[whispering]",calme:""};
+function apiUp(){return VAPI.ok===true&&Date.now()>=VAPI.downUntil}
+function useApi(){return (cfg.eng||"0")==="0"&&apiUp()}
+function apiMark(){VAPI.downUntil=Date.now()+60000}
+function apiWarn(){if(Date.now()>VAPI.warnUntil){VAPI.warnUntil=Date.now()+30000;toast("Le serveur de voix ne répond pas : la voix intégrée prend le relais.")}}
+function probeApi(){fetch("/api/tts",{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){VAPI.ok=!!(j&&j.ok===true)}).catch(function(){VAPI.ok=false})}
+async function apiAudio(text){
+ if(VAPI.cache[text])return VAPI.cache[text];
+ var ac=new AbortController(),to=setTimeout(function(){ac.abort()},15000);
+ try{
+  var r=await fetch("/api/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:text}),signal:ac.signal});
+  if(!r.ok)throw new Error("tts "+r.status);
+  var AC=window.AudioContext||window.webkitAudioContext;if(!apiCtx)apiCtx=new AC();
+  var d=await apiCtx.decodeAudioData(await r.arrayBuffer()),mono=new Float32Array(d.length),c,i;
+  for(c=0;c<d.numberOfChannels;c++){var x=d.getChannelData(c);for(i=0;i<mono.length;i++)mono[i]+=x[i]/d.numberOfChannels}
+  return VAPI.cache[text]={a:mono,sr:d.sampleRate};
+ }catch(e){apiMark();throw e}finally{clearTimeout(to)}
+}
+async function pool(fns,lim){var res=[],i=0;async function w(){while(i<fns.length){var k=i++;try{res[k]=await fns[k]()}catch(e){res[k]=null}}}await Promise.all(Array(Math.min(lim,fns.length)).fill(0).map(w));return res}
+function peakNorm(a,g){var pk=0,i,o=new Float32Array(a.length);for(i=0;i<a.length;i++)pk=Math.max(pk,Math.abs(a[i]));var s=pk>0?.9/pk*g:0;for(i=0;i<a.length;i++)o[i]=a[i]*s;return o}
 async function renderItems(items,n,maxDur,onStep){
- var parts=[],marks=[],t=0,sr=16000,i,j;
- for(i=0;i<items.length;i++){
-  var it=items[i],v=get(it.vid),e=EMO[it.k],b=await ttsBase(it.t);sr=b.sr;
-  var pf=clamp(v.pitch*(1+(e.p-1)*n),.75,1.4),sp=clamp(v.rate*cfg.spd*(1+(e.r-1)*n),.6,1.7);
-  var a=stretch(resample(b.a,pf),pf/sp,sr),pk=0,o=new Float32Array(a.length);
-  for(j=0;j<a.length;j++)pk=Math.max(pk,Math.abs(a[j]));
-  var g=pk>0?.9/pk*Math.min(1,e.v):0;for(j=0;j<a.length;j++)o[j]=a[j]*g;
-  marks.push({t0:t,t1:t+o.length/sr,c0:it.c0,c1:it.c0+it.t.length});
-  parts.push(o);t+=o.length/sr;parts.push(new Float32Array(Math.floor(sr*.2)));t+=.2;
-  if(onStep)onStep(i+1,items.length);
+ var groups=[],units=[],i,j;
+ items.forEach(function(it){var g=groups[groups.length-1];if(g&&g.vid===it.vid&&g.len+it.t.length<=450){g.items.push(it);g.len+=it.t.length}else groups.push({vid:it.vid,items:[it],len:it.t.length})});
+ var viaApi=useApi(),fres=[],done=0;
+ if(viaApi){
+  fres=await pool(groups.map(function(G){return function(){return apiAudio(G.items.map(function(it){return (FTAG[it.k]?FTAG[it.k]+" ":"")+it.t}).join(" ")).then(function(r){done++;if(onStep)onStep(done,groups.length);return r})}}),3);
+  if(fres.some(function(r){return !r}))apiWarn();
  }
+ for(i=0;i<groups.length;i++){
+  var G=groups[i],v=get(G.vid),li=G.items[G.items.length-1],fr=fres[i];
+  if(fr){
+   var e0=EMO[G.items[0].k],w=n>1?(n-1)*.35:0,pf=clamp(v.pitch*(1+(e0.p-1)*w),.8,1.3),sp=clamp(v.rate*cfg.spd*(1+(e0.r-1)*w),.7,1.5);
+   units.push({a:peakNorm(stretch(resample(fr.a,pf),pf/sp,fr.sr),1),sr:fr.sr,c0:G.items[0].c0,c1:li.c0+li.t.length});
+   continue;
+  }
+  if(!(await ttsLoad()))throw new Error("aucun moteur");
+  for(j=0;j<G.items.length;j++){
+   var it=G.items[j],e=EMO[it.k],bs=await ttsBase(it.t),pf2=clamp(v.pitch*(1+(e.p-1)*n),.75,1.4),sp2=clamp(v.rate*cfg.spd*(1+(e.r-1)*n),.6,1.7);
+   units.push({a:peakNorm(stretch(resample(bs.a,pf2),pf2/sp2,bs.sr),Math.min(1,e.v)),sr:bs.sr,c0:it.c0,c1:it.c0+it.t.length});
+   if(!viaApi&&onStep)onStep(units.length,items.length);
+  }
+ }
+ if(!units.length)throw new Error("vide");
+ var SR=units[0].sr;units.forEach(function(u){if(u.sr!==SR){u.a=resample(u.a,u.sr/SR);u.sr=SR}});
+ var parts=[],marks=[],t=0;
+ units.forEach(function(u){marks.push({t0:t,t1:t+u.a.length/SR,c0:u.c0,c1:u.c1});parts.push(u.a);t+=u.a.length/SR;parts.push(new Float32Array(Math.floor(SR*.2)));t+=.2});
  var len=parts.reduce(function(s,p){return s+p.length},0),all=new Float32Array(len),off=0;
  parts.forEach(function(p){all.set(p,off);off+=p.length});
- var dur=len/sr;
- if(maxDur&&dur>maxDur){var f=Math.min(1.6,dur/maxDur);all=stretch(all,1/f,sr);marks.forEach(function(m){m.t0/=f;m.t1/=f});dur=all.length/sr}
- return {a:all,sr:sr,marks:marks,dur:dur};
+ var dur=len/SR;
+ if(maxDur&&dur>maxDur){var f=Math.min(1.6,dur/maxDur);all=stretch(all,1/f,SR);marks.forEach(function(m){m.t0/=f;m.t1/=f});dur=all.length/SR}
+ return {a:all,sr:SR,marks:marks,dur:dur};
 }
 /*ENG-END*/
 function playBlob(b){stopPlay();aud.ontimeupdate=null;if(aud._u)URL.revokeObjectURL(aud._u);aud._u=URL.createObjectURL(b);aud.src=aud._u;aud.play().catch(function(){})}
@@ -1081,43 +1126,50 @@ function playTakeAudio(i,card){
  aud.onended=function(){stopPlay()};
  aud.play().catch(function(){toast("Lecture impossible.");stopPlay()});
 }
-async function engineTakes(segs,vid){
- var ok=await ttsLoad();
- if(!ok){takes.forEach(function(t){t.pending=false});tstat("");toast("La voix intégrée ne peut pas se charger ici (réseau ou page publiée). Ouvre le site sur ton hébergement.");return}
- var items=segs.map(function(s){return {t:s.t,k:s.k,vid:vid,c0:s.s}}),cur=takes.slice();
+var glp=0;
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function setGl(p,t){glp=Math.max(glp,p);$("#glring").style.setProperty("--p",glp);$("#glp").textContent=Math.round(glp)+" %";if(t)$("#glt").textContent=t}
+async function startGen(segs,vid){
+ var cur=takes.slice(),items=segs.map(function(s){return {t:s.t,k:s.k,vid:vid,c0:s.s}}),chars=items.reduce(function(a,i){return a+i.t.length},0),est=useApi()?3500+chars*25:9000+chars*120,t0=Date.now(),ok=true;
+ gen.disabled=true;gen.innerHTML='<span class="spin"></span>Générer…';
+ glp=0;$("#glav").innerHTML=dot(get(vid));$("#gl").hidden=false;setGl(0,"Création de l’audio…");
+ var tm=setInterval(function(){setGl(Math.min(92,100*(1-Math.exp(-(Date.now()-t0)/est*2.2))))},150);
  try{
   for(var i=0;i<cur.length;i++){
-   tstat("Création de l’audio… "+(i+1)+"/"+cur.length);
-   var r=await renderItems(items,cur[i].n,0);
-   if(takes[i]!==cur[i])return;
+   var r=await renderItems(items,cur[i].n,0,i===0?function(d,t){setGl(Math.min(85,d/t*85))}:null);
+   if(takes[0]!==cur[0])return;
    cur[i].url=URL.createObjectURL(wav(r.a,r.sr));cur[i].marks=r.marks;cur[i].dur=r.dur;cur[i].pending=false;
-   var card=document.querySelectorAll(".take")[i];if(card)card.querySelector(".du").textContent=fmtT(r.dur);
   }
-  tstat("");
-  if(cfg.auto&&takes[0]===cur[0])playTake(0);
- }catch(e){tstat("");takes.forEach(function(t){t.pending=false});toast("Création de l’audio impossible.")}
+ }catch(e){ok=false}
+ clearInterval(tm);
+ if(takes[0]!==cur[0])return;
+ if(ok)setGl(100,"Audio prêt");
+ await sleep(ok?300:0);
+ $("#gl").hidden=true;tstat("");gen.textContent="Générer";gen.disabled=!txt.value.trim();
+ takes.forEach(function(t){t.pending=false});
+ if(!ok)toast("Impossible de créer l’audio pour l’instant.");
+ renderTakes();
+ if(ok&&cfg.auto)playTake(0);
 }
 async function engineSay(text,vid){
- var ok=await ttsLoad();if(!ok){toast("La voix intégrée ne peut pas se charger ici. Ouvre le site sur ton hébergement.");return}
- try{var segs=segsOf(text),r=await renderItems(segs.map(function(s){return {t:s.t,k:s.k,vid:vid,c0:s.s}}),1,0);playBlob(wav(r.a,r.sr))}catch(e){toast("Lecture impossible.")}
+ try{var segs=segsOf(text),r=await renderItems(segs.map(function(s){return {t:s.t,k:s.k,vid:vid,c0:s.s}}),1,0);playBlob(wav(r.a,r.sr))}catch(e){toast("Impossible de lire pour l’instant.")}
 }
 async function demoEng(v,pgw){
- var ok=await ttsLoad();if(!ok){toast("La voix intégrée ne peut pas se charger ici. Ouvre le site sur ton hébergement.");return}
  try{
   var r=await renderItems([{t:"Bonjour, voici ma voix.",k:"calme",vid:v.id,c0:0}],1,0);
   playBlob(wav(r.a,r.sr));
   aud.ontimeupdate=function(){if(aud.duration)pgw(aud.currentTime/aud.duration*100+"%")};aud.onended=function(){pgw("100%")};
- }catch(e){toast("Lecture impossible.")}
+ }catch(e){toast("Impossible de lire pour l’instant.")}
 }
 async function prerenderCues(){
- var ok=await ttsLoad();if(!ok){$("#vstat").textContent="La voix intégrée ne peut pas se charger ici. Ouvre le site sur ton hébergement.";return false}
- var n=Math.min(vd.cues.length,60);
- for(var i=0;i<n;i++){
-  var c=vd.cues[i];$("#vstat").textContent="Préparation des voix… "+(i+1)+"/"+n;
+ var n=Math.min(vd.cues.length,60),done=0,tasks=[];
+ vd.cues.slice(0,n).forEach(function(c){
   var items=c.parts.map(function(p){return {t:p.t,k:p.k,vid:vd.sp[p.sp].voice,c0:0}});
-  if(!items.length)continue;
-  try{c.audio=await renderItems(items,1,Math.max(.8,(c.e-c.s)*.97))}catch(e){c.audio=null}
- }
+  if(!items.length)return;
+  tasks.push(function(){return renderItems(items,1,Math.max(.8,(c.e-c.s)*.97)).then(function(r){c.audio=r;$("#vstat").textContent="Préparation des voix… "+(++done)+"/"+n},function(){c.audio=null;$("#vstat").textContent="Préparation des voix… "+(++done)+"/"+n})});
+ });
+ $("#vstat").textContent="Préparation des voix… 0/"+n;
+ await pool(tasks,useApi()?3:1);
  return true;
 }
 var vd={cues:[],sp:[],file:null,url:"",spoken:{},timer:null};
