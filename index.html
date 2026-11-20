@@ -195,8 +195,8 @@ aside a.pill{display:block;text-align:center;margin:22px 4px 8px;padding:14px;bo
 .du{flex:none;font-size:12px;color:var(--mute);min-width:36px;text-align:right}
 a.ic{text-decoration:none;display:inline-block}
 .tst{margin:0 0 8px;font-size:12px;color:var(--mute)}
-.gl{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px 12px;margin-bottom:10px}
-.gl[hidden]{display:none}
+.gload{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px 12px;margin-bottom:10px}
+.gload[hidden]{display:none}
 .ring{--p:0;width:52px;height:52px;border-radius:50%;background:conic-gradient(var(--btn) calc(var(--p) * 1%),var(--line) 0);display:grid;place-items:center;flex:none}
 .ring .dot{width:42px;height:42px;font-size:16px;border:3px solid var(--card)}
 .glx b{display:block;font-size:14px;font-weight:600}
@@ -211,6 +211,34 @@ a.ic{text-decoration:none;display:inline-block}
 .vc small{color:var(--mute)}
 .vc b{margin:0 6px;font-weight:600}
 .vc i{font-style:normal;color:var(--hit);font-size:12px}
+.ico{display:inline-block;width:20px;height:20px;flex:none;vertical-align:middle;background:transparent;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain}
+.ico.sm{width:15px;height:15px;vertical-align:-3px}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:2.5s}}
+.m-play{-webkit-mask-image:var(--ic-play);mask-image:var(--ic-play)}
+.m-pause{-webkit-mask-image:var(--ic-pause);mask-image:var(--ic-pause)}
+.m-trash{-webkit-mask-image:var(--ic-trash);mask-image:var(--ic-trash)}
+.m-dl{-webkit-mask-image:var(--ic-dl);mask-image:var(--ic-dl)}
+.m-mic{-webkit-mask-image:var(--ic-mic);mask-image:var(--ic-mic)}
+.m-back{-webkit-mask-image:var(--ic-back);mask-image:var(--ic-back)}
+.m-sun{-webkit-mask-image:var(--ic-sun);mask-image:var(--ic-sun)}
+.m-grid{-webkit-mask-image:var(--ic-grid);mask-image:var(--ic-grid)}
+html.i-play .m-play,html.i-pause .m-pause,html.i-trash .m-trash,html.i-dl .m-dl,html.i-mic .m-mic,html.i-back .m-back,html.i-sun .m-sun,html.i-grid .m-grid{background:currentColor}
+.take .pl{display:grid;place-items:center}
+.pl .ico{width:14px;height:14px}
+.take .dl .ico{width:17px;height:17px}
+.fp{display:grid;place-items:center}
+.fp .ico{width:14px;height:14px}
+.circ .ico{width:20px;height:20px}
+.srb .ico{width:24px;height:24px}
+.ic .ico{margin:0}
+.tile .tic{width:28px;height:28px;border-radius:50%;background:var(--soft);display:grid;place-items:center}
+.tile .tic .ico{width:16px;height:16px}
+.drop::before,#rec::before{content:"";display:block;background:transparent;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain}
+.drop::before{width:26px;height:26px;margin:0 auto 6px;-webkit-mask-image:var(--ic-up);mask-image:var(--ic-up)}
+#rec::before{display:inline-block;width:18px;height:18px;margin-right:8px;vertical-align:-4px;-webkit-mask-image:var(--ic-mic2);mask-image:var(--ic-mic2)}
+html.i-up .drop::before,html.i-mic2 #rec::before{background:currentColor}
+html.i-spin .spin{background:currentColor}
+.spin{display:inline-block;width:16px;height:16px;border:0;background:transparent;-webkit-mask:var(--ic-spin) center/contain no-repeat;mask:var(--ic-spin) center/contain no-repeat;animation:rot .8s linear infinite;margin-right:8px;vertical-align:-3px}
 </style>
 </head>
 <body>
@@ -235,12 +263,12 @@ a.ic{text-decoration:none;display:inline-block}
 <aside id="drawer">
   <div class="dh">
     <div class="dlogo"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--btn)"/><g class="lg" fill="var(--btn-ink)"><rect x="5" y="12" width="3" height="8" rx="1.5"/><rect x="10" y="8" width="3" height="16" rx="1.5"/><rect x="15" y="11" width="3" height="10" rx="1.5"/><rect x="20" y="9" width="3" height="14" rx="1.5"/><rect x="25" y="13" width="3" height="6" rx="1.5"/></g></svg><b class="fx">Hes audio</b></div>
-    <button class="circ" id="thBtn" aria-label="Changer de thème">☀</button>
+    <button class="circ" id="thBtn" aria-label="Changer de thème"><span class="ico m-sun"></span></button>
     <button class="circ" id="closeDr" aria-label="Fermer le menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="14" rx="3"/><path d="M15 5v14"/></svg></button>
   </div>
-  <a href="#accueil" data-v="accueil"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-home"/></svg>Accueil</a>
+  <a href="#accueil" data-v="accueil"><span class="ico i m-grid"></span>Accueil</a>
   <p class="gl">Voix</p>
-  <div class="mr"><a href="#voix" data-v="voix"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-mic"/></svg>Mes voix</a><button class="plus" data-go="creer" aria-label="Créer une voix">+</button></div>
+  <div class="mr"><a href="#voix" data-v="voix"><span class="ico i m-mic"></span>Mes voix</a><button class="plus" data-go="creer" aria-label="Créer une voix">+</button></div>
   <a href="#explorer" data-v="explorer"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-compass"/></svg>Bibliothèque de voix</a>
   <a href="#creer" data-v="creer"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-wand"/></svg>Créer une voix</a>
   <p class="gl">Produits</p>
@@ -263,7 +291,7 @@ a.ic{text-decoration:none;display:inline-block}
     <div class="grid" style="margin-top:8px">
       <button class="tile" data-go="parler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 9v6M9 5v14M13 8v8M17 6v12M21 10v4"/></svg>Texte en voix</button>
       <button class="tile" data-go="creer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Créer une voix</button>
-      <button class="tile" data-go="voix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>Mes voix</button>
+      <button class="tile" data-go="voix"><span class="tic"><span class="ico m-mic"></span></span>Mes voix</button>
       <button class="tile" data-go="historique"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12a8 8 0 108-8M4 4v4h4M12 8v4l3 2"/></svg>Historique</button>
     </div>
     <button class="tile" data-go="video" style="width:100%;min-height:64px;margin-top:10px">Vidéo en voix (sous-titres)</button>
@@ -382,7 +410,7 @@ a.ic{text-decoration:none;display:inline-block}
   </section>
 </main>
 
-<div class="dock" id="dock"><div class="dockin"><p class="tst" id="tstat" hidden></p><div class="gl" id="gl" hidden><div class="ring" id="glring"><span id="glav"></span></div><div class="glx"><b id="glt">Création de l’audio…</b><small id="glp">0 %</small></div></div><div class="takes" id="takes"></div><div class="bar"><button class="btn" id="gen">Générer</button></div><div class="chips" id="chips"></div></div></div>
+<div class="dock" id="dock"><div class="dockin"><p class="tst" id="tstat" hidden></p><div class="gload" id="gl" hidden><div class="ring" id="glring"><span id="glav"></span></div><div class="glx"><b id="glt">Création de l’audio…</b><small id="glp">0 %</small></div></div><div class="takes" id="takes"></div><div class="bar"><button class="btn" id="gen">Générer</button></div><div class="chips" id="chips"></div></div></div>
 
 <input type="file" id="ph" accept="image/*" hidden>
 
@@ -423,7 +451,7 @@ a.ic{text-decoration:none;display:inline-block}
 <input type="file" id="bn" accept="image/*" hidden>
 <div id="sr" hidden>
   <div class="srh">
-    <button class="srb" id="srBack" aria-label="Retour">←</button>
+    <button class="srb" id="srBack" aria-label="Retour"><span class="ico m-back"></span></button>
     <div class="srp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="srIn" type="search" placeholder="Rechercher" autocomplete="off" autocapitalize="off" enterkeyhint="search"><button class="srx" id="srClr" aria-label="Effacer" hidden>×</button></div>
     <button class="srgo" id="srGo">Rechercher</button>
   </div>
@@ -436,6 +464,26 @@ a.ic{text-decoration:none;display:inline-block}
    Colle ici tes 2 valeurs Firebase (apiKey et databaseURL), puis enregistre le fichier.
    Exemple : window.HES_FIREBASE={apiKey:"AIza...",databaseURL:"https://ton-projet-default-rtdb.firebaseio.com"}; */
 window.HES_FIREBASE={apiKey:"",databaseURL:""};
+</script>
+<script>
+/* ===== LOGOS DES BOUTONS =====
+   Mets tes images dans le dossier "image" à côté de index.html. Si tes fichiers ont d'autres noms, change-les ici.
+   "logo" est facultatif : si image/audio.webp existe, il remplace le logo du menu. */
+/*ICONS-START*/
+window.HES_ICONS={dir:"image/",grid:"home.webp",mic:"mic.webp",mic2:"mic-small.webp",sun:"sun.png",back:"back.webp",play:"play.webp",pause:"pause.webp",dl:"download.webp",trash:"trash.webp",up:"upload.webp",spin:"spinner.webp",logo:"audio.webp"};
+/*ICONS-END*/
+(function(){
+ var C=window.HES_ICONS||{},d=C.dir||"",r=document.documentElement;
+ Object.keys(C).forEach(function(k){
+  if(k==="dir"||!C[k])return;
+  var u=C[k].indexOf("data:")===0?C[k]:d+C[k],im=new Image();
+  im.onload=function(){
+   if(k==="logo"){var s=document.querySelector(".dlogo svg");if(s){var i=document.createElement("img");i.src=u;i.alt="";i.width=28;i.height=28;i.style.borderRadius="8px";s.replaceWith(i)}return}
+   r.style.setProperty("--ic-"+k,'url("'+u+'")');r.classList.add("i-"+k);
+  };
+  im.src=u;
+ });
+})();
 </script>
 <script>
 (function(){
@@ -460,6 +508,7 @@ function store(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast
 mine=load("hes-mine",[]);hist=load("hes-hist",[]);profile=load("hes-profile",profile);favs=load("hes-favs",[]);use=load("hes-use",{});
 function get(id){return LIB.concat(mine,remote).filter(function(v){return v.id===id})[0]||LIB[0]}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var PLAYI='<span class="ico m-play"></span>',PAUSEI='<span class="ico m-pause"></span>';
 function dot(v){return v.photo?'<img class="dot" alt="" src="'+v.photo+'">':'<span class="dot">'+esc(v.name.charAt(0).toUpperCase())+'</span>'}
 function toast(m){var t=$("#toast");t.textContent=m;t.style.display="block";clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display="none"},4200)}
 function norm(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
@@ -513,12 +562,12 @@ function renderHist(el,limit){
  var list=limit?hist.slice(0,limit):hist;
  if(!list.length){el.innerHTML='<div class="empty">Rien pour l’instant. Écris ta première phrase dans « Texte en voix ».</div>';return}
  el.innerHTML=list.map(function(h,i){var v=get(h.v);if(!limit&&Q.historique&&!match(Q.historique,v.name+" "+h.t))return "";
-  return '<div class="row">'+dot(v)+'<div class="t"><b>'+esc(v.name)+'</b><span>'+esc(h.t)+'</span></div><button class="ic" data-p="'+i+'">Écouter</button>'+(limit?'':'<button class="ic del" data-d="'+i+'">Suppr.</button>')+'</div>'}).join("");
+  return '<div class="row">'+dot(v)+'<div class="t"><b>'+esc(v.name)+'</b><span>'+esc(h.t)+'</span></div><button class="ic" data-p="'+i+'" aria-label="Écouter"><span class="ico sm m-play"></span></button>'+(limit?'':'<button class="ic del" data-d="'+i+'" aria-label="Supprimer"><span class="ico sm m-trash"></span></button>')+'</div>'}).join("");
 }
 function renderMine(){
  var el=$("#mine");
  if(!mine.length){el.innerHTML='<div class="empty">Aucune voix pour l’instant.</div>';return}
- el.innerHTML=mine.map(function(v,i){if(!match(Q.voix,hay(v)))return "";return '<div class="row m"><button class="avb" data-ph="'+v.id+'" aria-label="Changer la photo">'+dot(v)+'</button><div class="t"><b>'+esc(v.name)+'</b><span>'+(v.pub?'Publique':'Privée')+'</span></div><div class="acts">'+(samples[v.id]?'<button class="ic" data-e="'+v.id+'">Extrait</button>':'')+'<button class="ic" data-fav="'+v.id+'">'+(isFav(v.id)?'♥':'♡')+'</button><button class="ic" data-pub="'+v.id+'">'+(v.pub?'Retirer':'Public')+'</button><button class="ic del" data-x="'+i+'">Suppr.</button></div></div>'}).join("");
+ el.innerHTML=mine.map(function(v,i){if(!match(Q.voix,hay(v)))return "";return '<div class="row m"><button class="avb" data-ph="'+v.id+'" aria-label="Changer la photo">'+dot(v)+'</button><div class="t"><b>'+esc(v.name)+'</b><span>'+(v.pub?'Publique':'Privée')+'</span></div><div class="acts">'+(samples[v.id]?'<button class="ic" data-e="'+v.id+'">Extrait</button>':'')+'<button class="ic" data-fav="'+v.id+'">'+(isFav(v.id)?'♥':'♡')+'</button><button class="ic" data-pub="'+v.id+'">'+(v.pub?'Retirer':'Public')+'</button><button class="ic del" data-x="'+i+'" aria-label="Supprimer"><span class="ico sm m-trash"></span></button></div></div>'}).join("");
 }
 function renderNew(){$("#newAv").innerHTML=newPhoto?'<img class="dot" alt="" src="'+newPhoto+'">':'<span class="dot">+</span>'}
 function renderAll(){var v=get(sel);$("#pickAv").innerHTML=dot(v);$("#pickName").textContent=v.name;renderHist($("#recent"),3);renderHist($("#hist"),0);renderMine();renderNew();renderAv();renderFavs();renderExplore();renderVcats();updSearchUI();updFb()}
@@ -700,14 +749,14 @@ $("#profDlg").addEventListener("cancel",function(e){if(welcome)e.preventDefault(
 /* favoris et explorer */
 function renderFavs(){
  var list=LIB.concat(mine,remote).filter(function(v){return isFav(v.id)&&match(Q.voix,hay(v))});
- $("#favs").innerHTML=list.length?list.map(function(v){return '<div class="fc"'+(v.photo?' style="background-image:url('+v.photo+')"':' data-i="'+esc(v.name.charAt(0).toUpperCase())+'"')+'><div class="fs"><b>'+esc(v.name)+'</b><small>'+esc(v.tag||(v.pub?'Publique':'Privée'))+'</small></div><button class="fp" data-demo="'+v.id+'" aria-label="Écouter">▶</button></div>'}).join(""):'<div class="empty" style="width:100%">Touche le cœur d’une voix pour la mettre ici.</div>';
+ $("#favs").innerHTML=list.length?list.map(function(v){return '<div class="fc"'+(v.photo?' style="background-image:url('+v.photo+')"':' data-i="'+esc(v.name.charAt(0).toUpperCase())+'"')+'><div class="fs"><b>'+esc(v.name)+'</b><small>'+esc(v.tag||(v.pub?'Publique':'Privée'))+'</small></div><button class="fp" data-demo="'+v.id+'" aria-label="Écouter"><span class="ico m-play"></span></button></div>'}).join(""):'<div class="empty" style="width:100%">Touche le cœur d’une voix pour la mettre ici.</div>';
 }
 function renderExplore(){
  var list=LIB.map(function(v){return {v:v,off:1}}).concat(mine.filter(function(v){return v.pub}).map(function(v){return {v:v,by:author(),aid:UID||"me"}})).concat(remote.filter(function(v){return v.authorId!==UID}).map(function(v){return {v:v,by:v.author,aid:v.authorId}}));
  list.sort(function(a,b){return (use[b.v.id]||0)-(use[a.v.id]||0)});
  list=list.filter(function(o){return match(Q.explorer,hay(o.v))&&(!catSel||o.v.cat===catSel)});
  $("#xlist").innerHTML=list.map(function(o){var v=o.v,n=use[v.id]||0;
-  return '<div class="xc"><div class="xa">'+dot(v)+'</div><b>'+esc(v.name)+'</b><small>'+esc([v.cat,v.tag].filter(Boolean).join(", ")||"Voix publiée")+'</small>'+descHtml(v)+'<div class="xp"><u id="pg-'+v.id+'"></u></div><div class="xr"><button class="ic" data-demo="'+v.id+'">▶ Écouter</button><button class="ic" data-use="'+v.id+'">Utiliser</button><button class="ic" data-fav="'+v.id+'">'+(isFav(v.id)?'♥':'♡')+'</button></div><div class="xm"><span>★ '+stars(n)+'</span><span>'+fmt(n)+' vues</span>'+(o.off?'<span>Voix Hes audio</span>':'<button class="lnk" data-author="'+esc(o.aid||"me")+'">'+esc(o.by||author())+'</button>')+'</div></div>'}).join("")||'<div class="empty">'+(Q.explorer||catSel?"Aucun résultat.":"Aucune voix publiée pour l’instant.")+'</div>';
+  return '<div class="xc"><div class="xa">'+dot(v)+'</div><b>'+esc(v.name)+'</b><small>'+esc([v.cat,v.tag].filter(Boolean).join(", ")||"Voix publiée")+'</small>'+descHtml(v)+'<div class="xp"><u id="pg-'+v.id+'"></u></div><div class="xr"><button class="ic" data-demo="'+v.id+'"><span class="ico sm m-play"></span> Écouter</button><button class="ic" data-use="'+v.id+'">Utiliser</button><button class="ic" data-fav="'+v.id+'">'+(isFav(v.id)?'♥':'♡')+'</button></div><div class="xm"><span>★ '+stars(n)+'</span><span>'+fmt(n)+' vues</span>'+(o.off?'<span>Voix Hes audio</span>':'<button class="lnk" data-author="'+esc(o.aid||"me")+'">'+esc(o.by||author())+'</button>')+'</div></div>'}).join("")||'<div class="empty">'+(Q.explorer||catSel?"Aucun résultat.":"Aucune voix publiée pour l’instant.")+'</div>';
 }
 function demo(id){
  var v=get(id),bar=$("#pg-"+id);stopPlay();
@@ -734,11 +783,11 @@ function segsOf(text){
 }
 function wfBars(S){var N=48,o=[];for(var i=0;i<N;i++){var c=S.charAt(Math.floor(i/N*S.length));o.push(c===" "||!c?16:34+(c.charCodeAt(0)*37%58))}return o}
 function renderTakes(){
- $("#takes").innerHTML=takes.map(function(t,i){return '<div class="take"><button class="pl" data-take="'+i+'" aria-label="Écouter la version '+t.l+'">▶</button><div class="tw"><small>'+t.l+'</small><div class="wf">'+wfBars(t.S).map(function(x){return '<i style="height:'+x+'%"></i>'}).join("")+'</div></div><span class="du">'+fmtT(t.dur||estDur(t))+'</span><button class="dl" data-dl="'+i+'" aria-label="Télécharger la version '+t.l+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg></button></div>'}).join("");
+ $("#takes").innerHTML=takes.map(function(t,i){return '<div class="take"><button class="pl" data-take="'+i+'" aria-label="Écouter la version '+t.l+'">'+PLAYI+'</button><div class="tw"><small>'+t.l+'</small><div class="wf">'+wfBars(t.S).map(function(x){return '<i style="height:'+x+'%"></i>'}).join("")+'</div></div><span class="du">'+fmtT(t.dur||estDur(t))+'</span><button class="dl" data-dl="'+i+'" aria-label="Télécharger la version '+t.l+'"><span class="ico m-dl"></span></button></div>'}).join("");
 }
 function stopPlay(){
  clearInterval(tick);if(aud){aud.pause();aud.ontimeupdate=null}if("speechSynthesis" in window)speechSynthesis.cancel();
- document.querySelectorAll(".take").forEach(function(c){c.classList.remove("on");c.querySelector(".pl").textContent="▶"});
+ document.querySelectorAll(".take").forEach(function(c){c.classList.remove("on");c.querySelector(".pl").innerHTML=PLAYI});
  document.querySelectorAll(".take i").forEach(function(x){x.classList.remove("on")});
 }
 function playTake(i){
@@ -749,7 +798,7 @@ function playTake(i){
  if(!("speechSynthesis" in window)){toast("Ce navigateur ne sait pas lire à voix haute.");return}
  var v=get(tk.v),fr=speechSynthesis.getVoices().filter(function(x){return /^fr/i.test(x.lang)})[0];
  var bars=card.querySelectorAll("i"),S=tk.S,pos=0,last=0,segEnd=0,rate=1,t0=Date.now();
- card.classList.add("on");card.querySelector(".pl").textContent="❚❚";
+ card.classList.add("on");card.querySelector(".pl").innerHTML=PAUSEI;
  function paint(){for(var b=0;b<bars.length;b++)bars[b].classList.toggle("on",b/bars.length*S.length<=pos)}
  tk.segs.forEach(function(sg,idx){
   var e=EMO[sg.k],u=new SpeechSynthesisUtterance(sg.t);u.lang="fr-FR";if(fr)u.voice=fr;
@@ -778,7 +827,7 @@ gen.onclick=function(){
 
 /* thème jour / nuit */
 function effTheme(){return document.documentElement.dataset.theme||(window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
-function setTheme(t,save){if(t)document.documentElement.dataset.theme=t;if(save)store("hes-theme",t);var e=effTheme(),tb=$("#thBtn");if(tb)tb.textContent=e==="dark"?"☾":"☀";document.querySelectorAll(".th button[data-th]").forEach(function(b){b.classList.toggle("on",b.dataset.th===e)})}
+function setTheme(t,save){if(t)document.documentElement.dataset.theme=t;if(save)store("hes-theme",t);var e=effTheme();document.querySelectorAll(".th button[data-th]").forEach(function(b){b.classList.toggle("on",b.dataset.th===e)})}
 setTheme(load("hes-theme",""),false);
 
 /* ---- recherche, catégories, paramètres ---- */
@@ -1117,7 +1166,7 @@ function playBuf(r){
 }
 function playTakeAudio(i,card){
  var tk=takes[i],S=tk.S,bars=card.querySelectorAll("i"),pl=card.querySelector(".pl");
- aud.src=tk.url;card.classList.add("on");pl.textContent="❚❚";
+ aud.src=tk.url;card.classList.add("on");pl.innerHTML=PAUSEI;
  aud.ontimeupdate=function(){
   var t=aud.currentTime,pos=0;
   for(var k=0;k<tk.marks.length;k++){var m=tk.marks[k];if(t>=m.t0)pos=t>=m.t1?m.c1:m.c0+(t-m.t0)/(m.t1-m.t0)*(m.c1-m.c0)}
