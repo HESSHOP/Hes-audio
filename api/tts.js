@@ -31,7 +31,9 @@ module.exports = async function handler(req, res) {
   if (!text) return res.status(400).json({ error: "text" });
 
   const payload = { text, format: "mp3" };
-  if (process.env.TTS_REFERENCE_ID) payload.reference_id = process.env.TTS_REFERENCE_ID;
+  const ref = String((body && body.ref) || "");
+  if (/^[A-Za-z0-9_-]{8,64}$/.test(ref)) payload.reference_id = ref;
+  else if (process.env.TTS_REFERENCE_ID) payload.reference_id = process.env.TTS_REFERENCE_ID;
 
   try {
     const r = await fetch(process.env.TTS_API_URL || "https://api.fish.audio/v1/tts", {
