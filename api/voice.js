@@ -46,7 +46,11 @@ module.exports = async function handler(req, res) {
     fd.append("enhance_audio_quality", "true");
     fd.append("voices", new Blob([audio], { type: "audio/wav" }), "sample.wav");
     const r = await fetch(base, { method: "POST", headers: auth, body: fd });
-    if (!r.ok) return res.status(502).json({ error: "fournisseur " + r.status });
+    if (!r.ok) {
+      let d = "";
+      try { const t = await r.text(); try { const o = JSON.parse(t); d = o.message || o.detail || o.error || t; } catch (e) { d = t; } } catch (e) {}
+      return res.status(502).json({ error: "fournisseur " + r.status, status: r.status, detail: String(d).slice(0, 160) });
+    }
     const j = await r.json();
     const id = j._id || j.id;
     if (!id) return res.status(502).json({ error: "réponse invalide" });
