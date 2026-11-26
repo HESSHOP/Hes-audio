@@ -769,9 +769,10 @@ async function cloneSample(url){
  return btoa(s);
 }
 async function cloneVoice(name){
- var r=await fetch("/api/voice",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name,audio:await cloneSample(cleanUrl),consent:true})});
+ var r=await fetch("/api/clone",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name,audio:await cloneSample(cleanUrl),consent:true})});
  var j={};try{j=await r.json()}catch(e){}
  if(!r.ok||!j.id){var st=+j.status||r.status,dt=j.detail?" ("+j.detail+")":"";
+  if(r.status===404||r.status===405||j.error==="method")throw new Error("le fichier api/clone.js n’est pas sur ton site ou n’est pas le bon. Ajoute celui du zip, puis fais Redeploy");
   throw new Error(st===401?"la clé du service de voix est refusée"+dt:st===402?"plus de crédits sur le compte du service de voix"+dt:st===403?(/limit|top up|credit/i.test(j.detail||"")?"ton compte du service de voix ne peut pas créer de voix pour l’instant (limite atteinte). Ajoute du crédit pour cloner. En attendant, utilise les voix de l’application":"le service de voix refuse de créer une voix avec cette clé : le clonage n’est peut-être pas autorisé sur ce compte"+dt):st===429?"trop de demandes, réessaie dans une minute":(j.error||("erreur "+r.status))+dt)}
  return j.id;
 }
@@ -1325,14 +1326,14 @@ async function loadCat(more){
  if(!more){pkey=key;ppage=1}
  ploading=true;perr="";renderExplore();
  try{
-  var r=await fetch("/api/voices?"+new URLSearchParams({q:Q.explorer||"",cat:pcat,lang:plang,page:String(more?ppage+1:1)}));
+  var r=await fetch("/api/catalogue?"+new URLSearchParams({q:Q.explorer||"",cat:pcat,lang:plang,page:String(more?ppage+1:1)}));
   var j={};try{j=await r.json()}catch(e){}
-  if(!r.ok)throw new Error(j.error||("erreur "+r.status));
+  if(!r.ok)throw new Error(r.status===404||r.status===405||j.error==="method"?"fichier":(j.error||("erreur "+r.status)));
   var items=(j.items||[]).map(mkProv).filter(function(v){return v.ref&&v.name});
   if(!more&&pkey!==key)return;
   plist=more?plist.concat(items.filter(function(v){return !plist.some(function(x){return x.id===v.id})})):items;
   if(more)ppage++;pmore=!!j.has_more;
- }catch(e){perr=VAPI.ok===true?"Impossible de charger les voix pour l’instant.":"Les voix de l’application ont besoin du serveur de voix (indisponible ici)."}
+ }catch(e){perr=e.message==="fichier"?"Le fichier api/catalogue.js n’est pas sur ton site ou n’est pas le bon. Ajoute celui du zip, puis fais Redeploy.":VAPI.ok===true?"Impossible de charger les voix pour l’instant.":"Les voix de l’application ont besoin du serveur de voix (indisponible ici)."}
  ploading=false;renderExplore();
 }
 function renderCat(){
